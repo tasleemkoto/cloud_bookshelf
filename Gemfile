@@ -75,3 +75,11 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+
+
+# For image uploading to Cloudinary
+gem "cloudinary"
+
+# For authorization
+gem "pundit"
