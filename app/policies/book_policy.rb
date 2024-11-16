@@ -14,21 +14,28 @@ class BookPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin? # Only admins/users that created a library can create books in their library
+    user_is_admin? # Only admins/users that created a library can create books in their library
   end
 
   def update?
-    user.admin? || book.user_id == user.id # Admins/book owner can update
+    user_is_admin? # Admins/book owner can update
   end
 
   def destroy?
-    user.admin? || book.user_id == user.id # Admins/book owner can delete
+    user_is_admin? # Admins/book owner can delete
   end
+
+  private
+
+  def user_is_admin?
+    record.library_users.exist?(user_id: user.id, is_admin: true) # check if user has an admin record in library_users for this library
+  end
+
 
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
-    def resolve
-      scope.all
-    end
+    # def resolve
+    #   scope.all
+    # end
   end
 end

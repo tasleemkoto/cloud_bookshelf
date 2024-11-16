@@ -18,17 +18,17 @@ class ReviewPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || review.user_id == user.id # Only the review owner/admin can edit reviews
+    record.user == user  # Only the review owner/admin can edit reviews
   end
 
   def destroy?
-    user.admin? || review.user_id == user.id # Only the review owner/admin can delete reviews
+    record.user == user  # Only the review owner/admin can delete reviews
   end
 
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
-    def resolve
-      scope.all
-    end
+    # def resolve
+    #   scope.all
+    # end
   end
 end
