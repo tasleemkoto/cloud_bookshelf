@@ -49,13 +49,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
     t.string "genre"
     t.integer "year"
     t.string "format"
-    t.boolean "availability"
+    t.boolean "availability", default: true
     t.string "location"
     t.string "qr_code"
     t.string "photo"
     t.integer "quantity"
     t.string "status"
-    t.integer "view_count"
+    t.integer "view_count", default: 0
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
