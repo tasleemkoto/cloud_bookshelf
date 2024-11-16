@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_16_084708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "library_id", null: false
+    t.index ["library_id"], name: "index_books_on_library_id"
+    t.index ["qr_code"], name: "index_books_on_qr_code", unique: true
     t.index ["user_id"], name: "index_books_on_user_id"
   end
 
@@ -73,6 +76,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_checkouts_on_book_id"
     t.index ["user_id"], name: "index_checkouts_on_user_id"
+  end
+
+  create_table "libraries", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "unique_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["unique_id"], name: "index_libraries_on_unique_id", unique: true
+  end
+
+  create_table "library_users", force: :cascade do |t|
+    t.boolean "is_admin", default: false
+    t.bigint "user_id", null: false
+    t.bigint "library_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["library_id"], name: "index_library_users_on_library_id"
+    t.index ["user_id"], name: "index_library_users_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -102,6 +123,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "phone_number"
+    t.string "photo"
+    t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -119,9 +143,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_062623) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "books", "libraries"
   add_foreign_key "books", "users"
   add_foreign_key "checkouts", "books"
   add_foreign_key "checkouts", "users"
+  add_foreign_key "library_users", "libraries"
+  add_foreign_key "library_users", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "reviews", "books"
   add_foreign_key "reviews", "users"
