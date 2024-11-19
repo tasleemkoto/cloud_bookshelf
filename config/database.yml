@@ -77,8 +77,7 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+
 production:
   <<: *default
-  database: cloud_bookshelf_production
-  username: cloud_bookshelf
-  password: <%= ENV["CLOUD_BOOKSHELF_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
