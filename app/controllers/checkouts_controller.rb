@@ -1,11 +1,12 @@
 class CheckoutsController < ApplicationController
-  
+
   def index
-    @checkouts = checkout.all
+    @checkout = Checkout.all
+    skip_policy_scope
   end
 
   def new
-    @checkouts = checkout.new
+    @checkout = Checkout.new
   end
 
   def create
@@ -15,20 +16,29 @@ class CheckoutsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
-
   end
 
   def edit
-    @checkout = checkout.find(params[:id])
+    @checkout = Checkout.find(params[:id])
 
   end
 
   def update
-    @checkout = checkout.find(params[:id])
+    #@checkout = checkout.find(params[:id])
     if @checkout.update(checkout_params)
       redirect_to @checkout, notice: "checkout successfully updated!"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
+  end
+
+  private
+
+  def set_checkout
+    @checkout = Checkout.find(params[:id])
+  end
+
+  def checkout_params
+    params.require(:checkout).permit(:start_date, :due_date, :return_date, :is_returned, :user_id, :book_id)
   end
 end
