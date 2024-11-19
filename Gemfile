@@ -83,3 +83,6 @@ gem "cloudinary"
 
 # For authorization
 gem "pundit"
+
+# for seeds
+gem 'faker'

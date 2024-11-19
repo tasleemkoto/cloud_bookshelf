@@ -7,3 +7,18 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+require 'faker'
+
+puts "Cleaning up database..."
+Library.destroy_all
+puts "Database cleaned"
+
+
+
+10.times do |i|
+  puts "Creating libraries"
+  Library.create(
+    name: Faker::Cannabis.strain,
+    unique_id: Faker::Alphanumeric.alphanumeric(number: 10),
+  )
+end
