@@ -8,6 +8,10 @@ class LibraryPolicy < ApplicationPolicy
   #   #LibraryPolicy
   # Admins (Librarians) can manage libraries they created or where they’re marked as an admin.
   # Students (Users) can view libraries but can’t modify them.
+  def index?
+    true
+  end
+  
   def show?
     true # all users can view libraries
   end
@@ -32,9 +36,9 @@ class LibraryPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
-    def resolve
-      scope.all
-    end
+    # def resolve
+    #   scope.all
+    # end
     
   end
 end
