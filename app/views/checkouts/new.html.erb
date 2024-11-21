@@ -1,2 +1,48 @@
-<h1>Checkouts#new</h1>
-<p>Find me in app/views/checkouts/new.html.erb</p>
+
+<h1>Create Book Checkout</h1>
+
+
+
+    <%= simple_form_for @checkout do |f| %>
+      <% if @checkout.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@checkout.errors.count, "information missing,") %> checkout couldn't be saved. all fields need to be filled:</h2>
+          <ul>
+            <% @checkout.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <table>
+  <tr>
+    <td style="padding: 20px;">
+      <div>
+        <%= f.input :user_id, collecton: User.all, label_method: :email, value_method: :id, prompt: "Select a user", label: "User Email"%>
+      </div>
+    </td>
+
+    <td style="padding: 20px;">
+      <div>
+        <%= f.input :book_id, collection: Book.all, label_method: :title, value_method: :id, prompt: "Select a book", label: "Book" %>
+      </div>
+    </td>
+    <td style="padding: 20px;">
+      <div>
+        <%= f.input :start_date, as: :date %>
+      </div>
+    </td>
+    <td style="padding: 20px;">
+      <div>
+        <%= f.input :due_date %>
+      </div>
+     </td>
+    </tr>
+  </table>
+
+<div style="margin-top: 20px;">
+    <%= f.submit "Create Checkout", class: 'btn btn-primary' %>
+    <%= link_to 'Back', checkouts_path, class: 'btn btn-secondary' %>
+<% end %>
+</div>

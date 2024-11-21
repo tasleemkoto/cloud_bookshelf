@@ -1,8 +1,8 @@
 class CheckoutsController < ApplicationController
+  before_action :set_checkout, only: [:edit, :update, :return]
 
   def index
     @checkout = Checkout.all
-    skip_policy_scope
   end
 
   def new
@@ -10,6 +10,7 @@ class CheckoutsController < ApplicationController
   end
 
   def create
+
     @checkout = Checkout.new(checkout_params)
     if @checkout.save
       redirect_to @checkout, notice: 'Checkout was successfully created.'
@@ -24,7 +25,7 @@ class CheckoutsController < ApplicationController
   end
 
   def update
-    #@checkout = checkout.find(params[:id])
+    @checkout = Checkout.find(params[:id])
     if @checkout.update(checkout_params)
       redirect_to @checkout, notice: "checkout successfully updated!"
     else

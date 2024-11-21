@@ -13,6 +13,6 @@ class User < ApplicationRecord
   has_many :reviews
   has_many :libraries, through: :library_users
 
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: false, uniqueness: true
   # validates :email_confirmation, presence: true, if: :email_changed?
 end
