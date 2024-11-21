@@ -10,7 +10,7 @@ class Book < ApplicationRecord
   validates :genre, presence: true
   validates :year, presence: true, numericality: { only_integer: true }, inclusion: { in: 1000..Date.today.year }
   validates :format, presence: true
-  validates :format, inclusion: { in: %w[ebook hardcover researchpaper] }, allow_blank: true
+  validates :format, inclusion: { in: %w[ebook hardcover researchpaper] }, allow_blank: false
   validates :qr_code, uniqueness: true, allow_nil: true
   validates :quantity, numericality: { only_integer: true }
 end
