@@ -10,8 +10,13 @@ class LibrariesController < ApplicationController
     skip_authorization
   end
 
-  def create
+  def new
+    @library = Library.new
+  end
 
+  def create
+    new
+    
   end
 
   def edit
