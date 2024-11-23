@@ -4,6 +4,8 @@ class Book < ApplicationRecord
   has_many :checkouts
   has_many :wishlists
   has_many :reviews
+  has_many :checkout_books
+  has_many :checkouts, through: :checkout_books
 
   validates :title, presence: true
   validates :author, presence: true

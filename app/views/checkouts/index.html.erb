@@ -1,37 +1,27 @@
-
-<h1>Books Checkouts</h1>
-<%= link_to 'Create New Checkout', new_checkout_path, class: 'btn btn-primary' %>
-
+<h1>Checkouts</h1>
 <table>
   <thead>
     <tr>
-      <th style="padding: 20px;">User</th>
-      <th style="padding: 20px;">Book</th>
-      <th style="padding: 50px;">Start Date</th>
-      <th style="padding: 50px;">Due Date</th>
-      <th style="padding: 50px;">Return Date</th>
-      <th style="padding: 50px;">Returned Status</th> <!-- is_returned -->
-
-      <th>Actions</th>
+      <th style="padding: 20px;">User Email</th>
+      <th style="padding: 20px;">Book Title</th>
+      <th style="padding: 20px;">Start Date</th>
+      <th style="padding: 20px;">Due Date</th>
+      <th style="padding: 20px;">Return Date</th>
     </tr>
   </thead>
   <tbody>
-    <% @checkout.each do |checkout| %>
+    <% @checkouts.each do |checkout| %>
       <tr>
         <td style="padding: 20px;"><%= checkout.user.email %></td>
         <td style="padding: 20px;"><%= checkout.book.title %></td>
         <td style="padding: 20px;"><%= checkout.start_date %></td>
         <td style="padding: 20px;"><%= checkout.due_date %></td>
         <td style="padding: 20px;"><%= checkout.return_date || "Not returned yet" %></td>
-        <td style="padding: 20px;"><%= checkout.is_returned ? 'Yes' : 'No' %></td>
-
-        <td>
-         <!-- <%= link_to 'Delete', checkout, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-          </td> -->
-        <td><%= link_to 'Edit', edit_checkout_path(checkout), class: 'btn btn-danger' %></td>
-
-
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<div style="margin-top: 20px;">
+  <%= link_to 'New Checkout', new_checkout_path, class: 'btn btn-primary' %>
+</div>

@@ -1,31 +1,30 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+# THIS FILE SHOULD ENSURE THE EXISTENCE OF RECORDS REQUIRED TO RUN THE APPLICATION IN EVERY ENVIRONMENT (PRODUCTION,
+# DEVELOPMENT, TEST). THE CODE HERE SHOULD BE IDEMPOTENT SO THAT IT CAN BE EXECUTED AT ANY POINT IN EVERY ENVIRONMENT.
+# THE DATA CAN THEN BE LOADED WITH THE BIN/RAILS DB:SEED COMMAND (OR CREATED ALONGSIDE THE DATABASE WITH DB:SETUP).
 #
-# Example:
+# EXAMPLE:
 #
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+#   ["ACTION", "COMEDY", "DRAMA", "HORROR"].EACH DO |GENRE_NAME|
+#     MOVIEGENRE.FIND_OR_CREATE_BY!(NAME: GENRE_NAME)
+#   END
+
 require 'faker'
 
 puts "Cleaning up database..."
-Library.destroy_all
+Book.update_all(library_id: nil) # Remove library associations
 Book.destroy_all
+Library.destroy_all
 User.destroy_all
 puts "Database cleaned"
 
-
-
 puts "Creating libraries..."
-10.times do
-  begin
-    Library.create!( name: Faker::Cannabis.unique.strain, unique_id: Faker::Alphanumeric.unique.alphanumeric(number: 10) )
-   rescue ActiveRecord::RecordInvalid => e
-    puts "Failed to create library: #{e.message}"
-    retry
-  end
+puts "Creating libraries..."
+puts "Creating libraries..."
+10.times.map do
+  Library.create!(name: Faker::Cannabis.unique.strain, unique_id: Faker::Alphanumeric.unique.alphanumeric(number: 10))
 end
+
+
 
 puts "Seeded 10 libraries!"
 
@@ -46,8 +45,6 @@ puts "Seeded 10 libraries!"
 #     )
 #   end
 # end
-
-
 
 # Generate 10 users
 10.times do
@@ -79,7 +76,7 @@ puts "Seeded 10 users!"
     user_id: User.ids.sample,
     library_id: Library.ids.sample
     )
-  end
+end
 
 puts "Seeded 10 books!"
 puts "Seeding completed!"

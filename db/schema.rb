@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_16_084708) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_23_031501) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,16 +65,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_084708) do
     t.index ["user_id"], name: "index_books_on_user_id"
   end
 
+  create_table "checkout_books", force: :cascade do |t|
+    t.bigint "checkout_id", null: false
+    t.bigint "book_id", null: false
+    t.date "start_date"
+    t.date "due_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_checkout_books_on_book_id"
+    t.index ["checkout_id"], name: "index_checkout_books_on_checkout_id"
+  end
+
   create_table "checkouts", force: :cascade do |t|
     t.date "start_date"
     t.date "due_date"
     t.date "return_date"
     t.boolean "is_returned", default: false
     t.bigint "user_id", null: false
-    t.bigint "book_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["book_id"], name: "index_checkouts_on_book_id"
+    t.integer "book_id"
     t.index ["user_id"], name: "index_checkouts_on_user_id"
   end
 
@@ -145,7 +155,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_16_084708) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "books", "libraries"
   add_foreign_key "books", "users"
-  add_foreign_key "checkouts", "books"
+  add_foreign_key "checkout_books", "books"
+  add_foreign_key "checkout_books", "checkouts"
   add_foreign_key "checkouts", "users"
   add_foreign_key "library_users", "libraries"
   add_foreign_key "library_users", "users"
