@@ -18,10 +18,13 @@ User.destroy_all
 puts "Database cleaned"
 
 puts "Creating libraries..."
-puts "Creating libraries..."
-puts "Creating libraries..."
-10.times.map do
-  Library.create!(name: Faker::Cannabis.unique.strain, unique_id: Faker::Alphanumeric.unique.alphanumeric(number: 10))
+10.times do
+  begin
+    Library.create!( name: Faker::Cannabis.unique.strain, unique_id: Faker::Alphanumeric.unique.alphanumeric(number: 10) )
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Failed to create library: #{e.message}"
+    retry
+  end
 end
 
 
