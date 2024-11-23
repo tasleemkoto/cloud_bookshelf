@@ -1,0 +1,13 @@
+<%= simple_form_for(@library) do |f| %>
+  <div class="form-group">
+    <%= f.input :name, label: "Library Name" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :unique_id, label: "Unique ID" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

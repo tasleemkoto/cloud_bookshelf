@@ -31,14 +31,14 @@ class LibraryPolicy < ApplicationPolicy
   private
 
   def user_is_admin?
-    record.library_users.exist?(user_id: user.id, is_admin: true) # check if user has an admin record in library_users for this library
+    record.library_users.exists?(user_id: user.id, is_admin: true) # check if user has an admin record in library_users for this library
   end
 
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
-    # def resolve
-    #   scope.all
-    # end
+    def resolve
+      scope.all
+    end
     
   end
 end
