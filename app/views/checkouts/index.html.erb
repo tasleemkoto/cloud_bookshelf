@@ -11,13 +11,15 @@
   </thead>
   <tbody>
     <% @checkouts.each do |checkout| %>
+        <% checkout.checkout_books.each do |checkout_book| %>
       <tr>
         <td style="padding: 20px;"><%= checkout.user.email %></td>
-        <td style="padding: 20px;"><%= checkout.book.title %></td>
-        <td style="padding: 20px;"><%= checkout.start_date %></td>
-        <td style="padding: 20px;"><%= checkout.due_date %></td>
+        <td style="padding: 20px;"><%= checkout_book.book.title %></td>
+        <td style="padding: 20px;"><%= checkout_book.start_date %></td>
+        <td style="padding: 20px;"><%= checkout_book.due_date %></td>
         <td style="padding: 20px;"><%= checkout.return_date || "Not returned yet" %></td>
       </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

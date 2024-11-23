@@ -47,9 +47,11 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
     let bookCount = 1;
     document.getElementById('add-book').addEventListener('click', function(e) {
       e.preventDefault();
+      console.log("Add Another Book button clicked");
       bookCount++;
 
       const booksContainer = document.getElementById('books-container');
@@ -69,6 +71,7 @@
         <input type="date" name="books[][due_date]" id="due_date_${bookCount}">
       `;
       booksContainer.appendChild(newBookEntry);
+      console.log(`Added book entry ${bookCount}`);
     });
   });
 </script>
