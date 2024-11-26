@@ -13,6 +13,11 @@ class User < ApplicationRecord
   has_many :reviews
   has_many :libraries, through: :library_users
 
-  validates :email, presence: false, uniqueness: true
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
   # validates :email_confirmation, presence: true, if: :email_changed?
+  
+  #instance method
+  def library_admin?(library)
+    library_users.exists?(library: library, is_admin: true)
+  end
 end
