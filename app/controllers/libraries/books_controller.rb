@@ -8,11 +8,7 @@ class Libraries::BooksController < ApplicationController
   end
 
   def new
-<<<<<<< HEAD
     @book = Book.new
-=======
-    @book =Book.new
->>>>>>> master
   end
 
   def create

@@ -1,22 +1,14 @@
 class Book < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :library
-<<<<<<< HEAD
-  has_many :checkouts
-  has_many :wishlists
-  has_many :reviews
-  has_many :checkout_books
-  has_many :checkouts, through: :checkout_books
-=======
   has_many :checkouts, dependent: :destroy
   # has_many :wishlists
-  has_many :reviews, dependent: :destroy 
->>>>>>> master
+  has_many :reviews, dependent: :destroy
 
   validates :title, presence: true
   validates :author, presence: true
   validates :genre, presence: true
-  validates :year, presence: true, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year } 
+  validates :year, presence: true, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year }
   validates :status, inclusion: { in: %w[available reserve_pending reserved not_available] }
   validates :format, inclusion: { in: %w[ebook hardcover researchpaper] }, allow_blank: false
   # validates :qr_code, uniqueness: true, allow_nil: true
@@ -59,10 +51,10 @@ class Book < ApplicationRecord
 
   def all_reserved?
     format == "hardcover" && checkouts.pending.count >= quantity
-   
+
   end
 
   # Scopes
   scope :available, -> { where(status: "available") }
-  
+
 end
