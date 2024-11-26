@@ -1,0 +1,9 @@
+<!-- app/views/checkouts/_checkout_book_fields.html.erb -->
+
+<!-- Highlighted: Ensuring correct usage of form builder -->
+<div class="nested-fields">
+  <%= f.input :book_id, collection: Book.all, label_method: :title, value_method: :id, prompt: "Select a Book", input_html: { class: 'book-dropdown' } %>
+  <%= f.input :start_date, as: :date %>
+  <%= f.input :due_date, as: :date %>
+  <%= link_to_remove_association "Remove this book", f %>
+</div>

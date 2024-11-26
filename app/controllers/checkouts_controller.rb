@@ -1,8 +1,8 @@
 class CheckoutsController < ApplicationController
-  before_action :set_checkout, only: [:edit, :update, :return]
+  before_action :set_checkout, only: [:edit, :update, :destroy]
 
   def index
-    @checkout = Checkout.all
+    @checkouts = Checkout.includes(:user).all
   end
 
   def new
@@ -10,27 +10,29 @@ class CheckoutsController < ApplicationController
   end
 
   def create
-
     @checkout = Checkout.new(checkout_params)
     if @checkout.save
-      redirect_to @checkout, notice: 'Checkout was successfully created.'
+      create_checkout_books
+      redirect_to checkouts_path, notice: 'Checkout was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
 
   def edit
-    @checkout = Checkout.find(params[:id])
-
   end
 
   def update
-    @checkout = Checkout.find(params[:id])
     if @checkout.update(checkout_params)
-      redirect_to @checkout, notice: "checkout successfully updated!"
+      redirect_to @checkout, notice: 'Checkout successfully updated!'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
+  end
+
+  def destroy
+    @checkout.destroy
+    redirect_to checkouts_url, notice: 'Checkout was successfully destroyed.'
   end
 
   private
@@ -40,6 +42,24 @@ class CheckoutsController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:start_date, :due_date, :return_date, :is_returned, :user_id, :book_id)
+    params.require(:checkout).permit(:user_id)
   end
+
+  def books_params
+    params[:books]&.map do |book|
+      book.permit(:book_id, :start_date, :due_date)
+    end || []
+  end
+
+  def create_checkout_books
+    books_params.each do |book|
+      CheckoutBook.create(
+        checkout_id: @checkout.id,
+        book_id: book[:book_id],
+        start_date: book[:start_date],
+        due_date: book[:due_date]
+      )
+    end
+  end
+
 end

@@ -86,3 +86,5 @@ gem "pundit"
 
 # for seeds
 gem 'faker'
+
+gem 'cocoon'

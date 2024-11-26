@@ -1,9 +1,17 @@
 class Book < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :library
+<<<<<<< HEAD
+  has_many :checkouts
+  has_many :wishlists
+  has_many :reviews
+  has_many :checkout_books
+  has_many :checkouts, through: :checkout_books
+=======
   has_many :checkouts, dependent: :destroy
   # has_many :wishlists
   has_many :reviews, dependent: :destroy 
+>>>>>>> master
 
   validates :title, presence: true
   validates :author, presence: true

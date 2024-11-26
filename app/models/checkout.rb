@@ -18,7 +18,7 @@ class Checkout < ApplicationRecord
   #logic for checkouts:
   def expire!
     return unless pending? && created_at < 4.days.ago
-      
+
     update!(status: "returned")
 
     book.mark_available!
