@@ -6,7 +6,7 @@
 <div class="container">
     <%= link_to "Add Book"  %>
 
-    <%= link_to "Manage Users" %>
+    <%= link_to "Manage Users", library_library_users_path(@library) %>
 
     <%# Implement link to redirect to /libraries/:id/books %>
 <%= link_to "Back to Libraries", libraries_path %>
