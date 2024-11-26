@@ -52,6 +52,6 @@ class LibraryUsersController < ApplicationController
   end
 
   def authorize_library_user
-    authorize @library_user || LibraryUser
+    authorize @library_user 
   end
 end
