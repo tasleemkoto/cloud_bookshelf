@@ -30,9 +30,9 @@
         <% end %>
       </select>
       <%= label_tag "start_date_1", "Start Date" %>
-      <%= date_field_tag "books[][start_date]", nil, id: "start_date_1" %>
+      <%= date_field_tag "books[][start_date]", Date.today, id: "start_date_1" %>
       <%= label_tag "due_date_1", "Due Date" %>
-      <%= date_field_tag "books[][due_date]", nil, id: "due_date_1" %>
+      <%= date_field_tag "books[][due_date]", Date.today + 7 , id: "due_date_1" %>
     </div>
   </div>
 
@@ -66,9 +66,9 @@
           <% end %>
         </select>
         <label for="start_date_${bookCount}">Start Date</label>
-        <input type="date" name="books[][start_date]" id="start_date_${bookCount}">
+        <input type="date" name="books[][start_date]" id="start_date_${bookCount}" value="<%=Date.today %>">
         <label for="due_date_${bookCount}">Due Date</label>
-        <input type="date" name="books[][due_date]" id="due_date_${bookCount}">
+        <input type="date" name="books[][due_date]" id="due_date_${bookCount}" value="<%=Date.today + 7 %>">
       `;
       booksContainer.appendChild(newBookEntry);
       console.log(`Added book entry ${bookCount}`);

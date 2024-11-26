@@ -1,4 +1,9 @@
 <h1>Checkouts</h1>
+
+<div style="margin-top: 20px;">
+  <%= link_to 'New Checkout', new_checkout_path, class: 'btn btn-primary' %>
+</div>
+
 <table>
   <thead>
     <tr>
@@ -7,6 +12,7 @@
       <th style="padding: 20px;">Start Date</th>
       <th style="padding: 20px;">Due Date</th>
       <th style="padding: 20px;">Return Date</th>
+
     </tr>
   </thead>
   <tbody>
@@ -17,13 +23,12 @@
         <td style="padding: 20px;"><%= checkout_book.book.title %></td>
         <td style="padding: 20px;"><%= checkout_book.start_date %></td>
         <td style="padding: 20px;"><%= checkout_book.due_date %></td>
+        <td style="padding: 20px;"><%= checkout_book.book.status %></td>
         <td style="padding: 20px;"><%= checkout.return_date || "Not returned yet" %></td>
+        <td style="padding: 20px;"><%= link_to 'Renew', edit_checkout_path(checkout), class: 'btn btn-primary' %> </td>
+      
       </tr>
       <% end %>
     <% end %>
   </tbody>
 </table>
-
-<div style="margin-top: 20px;">
-  <%= link_to 'New Checkout', new_checkout_path, class: 'btn btn-primary' %>
-</div>

@@ -1,42 +1,30 @@
-import { Controller } from "@hotwired/stimulus";
+document.addEventListener("DOMContentLoaded", () => {
+  const bookSelect = document.getElementById("book-select");
+  const details = {
+    author: document.getElementById("book-author"),
+    format: document.getElementById("book-format"),
+    availability: document.getElementById("book-availability"),
+    location: document.getElementById("book-location"),
+    quantity: document.getElementById("book-quantity"),
+  };
 
-export default class extends Controller {
-  static targets = [
-    "bookSelect",
-    "bookAuthor",
-    "bookFormat",
-    "bookAvailability",
-    "bookLocation",
-    "bookQuantity",
-  ];
-
-  connect() {
-    console.log("Checkout controller connected");
-  }
-
-  updateDetails(event) {
+  bookSelect.addEventListener("change", async (event) => {
     const bookId = event.target.value;
 
     if (bookId) {
-      fetch(`/books/${bookId}/details`)
-        .then((response) => response.json())
-        .then((data) => {
-          this.bookAuthorTarget.textContent = data.author || "N/A";
-          this.bookFormatTarget.textContent = data.format || "N/A";
-          this.bookAvailabilityTarget.textContent = data.availability ? "Yes" : "No";
-          this.bookLocationTarget.textContent = data.location || "N/A";
-          this.bookQuantityTarget.textContent = data.quantity || "N/A";
-        });
-    } else {
-      this.clearDetails();
-    }
-  }
+      const response = await fetch(`/books/${bookId}/details`);
+      const data = await response.json();
 
-  clearDetails() {
-    this.bookAuthorTarget.textContent = "";
-    this.bookFormatTarget.textContent = "";
-    this.bookAvailabilityTarget.textContent = "";
-    this.bookLocationTarget.textContent = "";
-    this.bookQuantityTarget.textContent = "";
-  }
-}
+      details.author.textContent = data.author || "N/A";
+      details.format.textContent = data.format || "N/A";
+      details.availability.textContent = data.availability ? "Yes" : "No";
+      details.location.textContent = data.location || "N/A";
+      details.quantity.textContent = data.quantity || "N/A";
+    } else {
+      // Clear details if no book is selected
+      Object.values(details).forEach((element) => (element.textContent = ""));
+    }
+  });
+});
+
+

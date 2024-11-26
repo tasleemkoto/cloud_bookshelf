@@ -13,7 +13,7 @@ class CheckoutsController < ApplicationController
     @checkout = Checkout.new(checkout_params)
     if @checkout.save
       create_checkout_books
-      redirect_to @checkout, notice: 'Checkout was successfully created.'
+      redirect_to checkouts_path, notice: 'Checkout was successfully created.'
     else
       render :new
     end
@@ -61,4 +61,5 @@ class CheckoutsController < ApplicationController
       )
     end
   end
+
 end
