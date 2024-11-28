@@ -1,4 +1,5 @@
 class Libraries::BooksController < ApplicationController
+  before_action :set_book, only: [:show, :edit, :update, :destroy]
   def index
     authorize @library, :show?
     @books = @library.books
@@ -101,5 +102,27 @@ class Libraries::BooksController < ApplicationController
 
   def book_params
     params.require(:book).permit(:title, :author,:genre, :published_year, :format, :quantity)
+  end
+
+  class BooksController < ApplicationController
+    def details
+      book = Book.find(params[:id])
+      render json: {
+        author: book.author,
+        format: book.format,
+        availability: book.availability,
+        location: book.location,
+        quantity: book.quantity
+      }
+    end
+  end
+
+  private
+  def set_book
+    @book = Book.find(params[:id])
+  end
+
+  def book_params
+   params.require(:book).permit(:title, :summary, :author, :genre, :year, :format, :availability, :location, :qr_code, :photo, :quantity, :status, :view_count)
   end
 end

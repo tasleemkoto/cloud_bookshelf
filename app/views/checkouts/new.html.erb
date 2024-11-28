@@ -1,48 +1,77 @@
+<h1>Book Checkout</h1>
 
-<h1>Create Book Checkout</h1>
+<%= form_with model: @checkout, local: true do |f| %>
+  <% if @checkout.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@checkout.errors.count, "information missing,") %> checkout couldn't be saved. All fields need to be filled:</h2>
+      <ul>
+        <% @checkout.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
+  <!-- User Selection -->
+  <div>
+    <%= f.label :user_id, "User Email" %>
+    <%= f.collection_select :user_id, User.all, :id, :email, prompt: "Select a user" %>
+  </div>
 
+  <!-- Books and Dates -->
+  <h3>Books</h3>
+  <div id="books-container">
+    <div class="book-entry">
+      <label for="book_id_1">Book</label>
+      <select name="books[][book_id]" id="book_id_1">
+        <option value="">Select a Book</option>
+        <% Book.all.each do |book| %>
+          <option value="<%= book.id %>"><%= book.title %></option>
+        <% end %>
+      </select>
+      <%= label_tag "start_date_1", "Start Date" %>
+      <%= date_field_tag "books[][start_date]", Date.today, id: "start_date_1" %>
+      <%= label_tag "due_date_1", "Due Date" %>
+      <%= date_field_tag "books[][due_date]", Date.today + 7 , id: "due_date_1" %>
+    </div>
+  </div>
 
-    <%= simple_form_for @checkout do |f| %>
-      <% if @checkout.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@checkout.errors.count, "information missing,") %> checkout couldn't be saved. all fields need to be filled:</h2>
-          <ul>
-            <% @checkout.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-          </ul>
-        </div>
-      <% end %>
+  <button type="button" id="add-book" class="btn btn-secondary">Add Another Book</button>
 
-      <table>
-  <tr>
-    <td style="padding: 20px;">
-      <div>
-        <%= f.input :user_id, collecton: User.all, label_method: :email, value_method: :id, prompt: "Select a user", label: "User Email"%>
-      </div>
-    </td>
-
-    <td style="padding: 20px;">
-      <div>
-        <%= f.input :book_id, collection: Book.all, label_method: :title, value_method: :id, prompt: "Select a book", label: "Book" %>
-      </div>
-    </td>
-    <td style="padding: 20px;">
-      <div>
-        <%= f.input :start_date, as: :date %>
-      </div>
-    </td>
-    <td style="padding: 20px;">
-      <div>
-        <%= f.input :due_date %>
-      </div>
-     </td>
-    </tr>
-  </table>
-
-<div style="margin-top: 20px;">
+  <!-- Submit Button -->
+  <div style="margin-top: 20px;">
     <%= f.submit "Create Checkout", class: 'btn btn-primary' %>
     <%= link_to 'Back', checkouts_path, class: 'btn btn-secondary' %>
+  </div>
 <% end %>
-</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded and parsed");
+    let bookCount = 1;
+    document.getElementById('add-book').addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log("Add Another Book button clicked");
+      bookCount++;
+
+      const booksContainer = document.getElementById('books-container');
+      const newBookEntry = document.createElement('div');
+      newBookEntry.classList.add('book-entry');
+      newBookEntry.innerHTML = `
+        <label for="book_id_${bookCount}">Book</label>
+        <select name="books[][book_id]" id="book_id_${bookCount}">
+          <option value="">Select a Book</option>
+          <% Book.all.each do |book| %>
+            <option value="<%= book.id %>"><%= book.title %></option>
+          <% end %>
+        </select>
+        <label for="start_date_${bookCount}">Start Date</label>
+        <input type="date" name="books[][start_date]" id="start_date_${bookCount}" value="<%=Date.today %>">
+        <label for="due_date_${bookCount}">Due Date</label>
+        <input type="date" name="books[][due_date]" id="due_date_${bookCount}" value="<%=Date.today + 7 %>">
+      `;
+      booksContainer.appendChild(newBookEntry);
+      console.log(`Added book entry ${bookCount}`);
+    });
+  });
+</script>

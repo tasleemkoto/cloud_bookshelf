@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :books do
       resources :reviews, only: [:edit, :create, :destroy]
    end
+   resources :library_users
   end
 
   resources :checkouts, only: [:index, :new, :create, :edit, :update] do
