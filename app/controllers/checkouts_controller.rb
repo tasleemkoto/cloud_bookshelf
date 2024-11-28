@@ -2,7 +2,7 @@ class CheckoutsController < ApplicationController
   before_action :set_checkout, only: [:edit, :update, :destroy]
 
   def index
-    @checkouts = Checkout.includes(:user).all
+    @checkouts = Checkout.includes(:user, :book).all
   end
 
   def new
@@ -11,10 +11,16 @@ class CheckoutsController < ApplicationController
 
   def create
     @checkout = Checkout.new(checkout_params)
+
+    # Debugging: print parameters to console
+    logger.debug "Checkout Params: #{checkout_params.inspect}"
+
     if @checkout.save
-      create_checkout_books
-      redirect_to checkouts_path, notice: 'Checkout was successfully created.'
+      @checkout.book.update(status: "CheckedOut")
+      redirect_to @checkout, notice: 'Checkout was successfully created.'
     else
+    # Log validation errors
+      logger.debug "Checkout Save Failed: #{@checkout.errors.full_messages}"
       render :new
     end
   end
@@ -24,6 +30,7 @@ class CheckoutsController < ApplicationController
 
   def update
     if @checkout.update(checkout_params)
+      @checkout.book.update(status: "CheckedOut")
       redirect_to @checkout, notice: 'Checkout successfully updated!'
     else
       render :edit
@@ -31,6 +38,7 @@ class CheckoutsController < ApplicationController
   end
 
   def destroy
+    @checkout.book.update(status: "Available")
     @checkout.destroy
     redirect_to checkouts_url, notice: 'Checkout was successfully destroyed.'
   end
@@ -42,24 +50,6 @@ class CheckoutsController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:user_id)
+    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned)
   end
-
-  def books_params
-    params[:books]&.map do |book|
-      book.permit(:book_id, :start_date, :due_date)
-    end || []
-  end
-
-  def create_checkout_books
-    books_params.each do |book|
-      CheckoutBook.create(
-        checkout_id: @checkout.id,
-        book_id: book[:book_id],
-        start_date: book[:start_date],
-        due_date: book[:due_date]
-      )
-    end
-  end
-
 end

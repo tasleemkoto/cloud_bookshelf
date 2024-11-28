@@ -36,7 +36,21 @@
     </div>
   </div>
 
-  <button type="button" id="add-book" class="btn btn-secondary">Add Another Book</button>
+<!-- Book Selection -->
+  <div>
+    <%= f.label :book_id, "Book Title" %>
+    <%= f.collection_select :book_id, Book.all, :id, :title, prompt: "Select a Book", selected: params[:book_id], onchange: 'this.form.submit();' %>
+  </div>
+
+  <!-- Book Details -->
+  <% if params[:book_id].present? %>
+    <% book = Book.find(params[:book_id]) %>
+    <div id="book-details">
+      <p><strong>Author:</strong> <%= book.author %></p>
+      <p><strong>Availability:</strong> <%= book.status == "Available" ? "Yes" : "No" %></p>
+      <p><strong>Quantity:</strong> <%= book.quantity %></p>
+    </div>
+  <% end %>
 
   <!-- Submit Button -->
   <div style="margin-top: 20px;">
@@ -44,34 +58,3 @@
     <%= link_to 'Back', checkouts_path, class: 'btn btn-secondary' %>
   </div>
 <% end %>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM fully loaded and parsed");
-    let bookCount = 1;
-    document.getElementById('add-book').addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log("Add Another Book button clicked");
-      bookCount++;
-
-      const booksContainer = document.getElementById('books-container');
-      const newBookEntry = document.createElement('div');
-      newBookEntry.classList.add('book-entry');
-      newBookEntry.innerHTML = `
-        <label for="book_id_${bookCount}">Book</label>
-        <select name="books[][book_id]" id="book_id_${bookCount}">
-          <option value="">Select a Book</option>
-          <% Book.all.each do |book| %>
-            <option value="<%= book.id %>"><%= book.title %></option>
-          <% end %>
-        </select>
-        <label for="start_date_${bookCount}">Start Date</label>
-        <input type="date" name="books[][start_date]" id="start_date_${bookCount}" value="<%=Date.today %>">
-        <label for="due_date_${bookCount}">Due Date</label>
-        <input type="date" name="books[][due_date]" id="due_date_${bookCount}" value="<%=Date.today + 7 %>">
-      `;
-      booksContainer.appendChild(newBookEntry);
-      console.log(`Added book entry ${bookCount}`);
-    });
-  });
-</script>
