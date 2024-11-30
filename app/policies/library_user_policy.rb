@@ -9,6 +9,11 @@ class LibraryUserPolicy < ApplicationPolicy
   def new?
     record.library == user.library
   end
+
+  def create?
+    true
+  end
+  
   private
 
   # Checks if the user is an admin of the library associated with the LibraryUser record
