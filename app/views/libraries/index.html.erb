@@ -4,31 +4,26 @@
   <%= link_to "Add New Library", new_library_path, class: "btn btn-primary" %>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Unique ID</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @libraries.each do |library| %>
-      <tr>
-        <td><%= library.name %></td>
-        <td><%= library.unique_id %></td>
-        <td>
-          <% if policy(library).show? %>
-            <%= link_to "View", library_path(library), class: "btn btn-secondary" %>
-          <% end %>
-          <% if policy(library).update? %>
-            <%= link_to "Edit", edit_library_path(library), class: "btn btn-warning" %>
-          <% end %>
-          <% if policy(library).destroy? %>
-            <%= link_to "Delete", library_path(library), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="container gap-3">
+  <% @libraries.each do |library| %>
+    <div class="card-library d-flex p-3 rounded-4 my-3" >
+      <div>
+       <% if library.photo.attached? %>
+        <%= cl_image_tag library.photo.key, class: "rounded-4"%>
+        <% else %>
+        <p>no photo</p>
+       <% end %>
+      </div>
+
+      <div class="ms-3">
+       <h4><%= library.name %></h4>
+       <% if policy(library).show? %>
+        <%= link_to "View", library_path(library), class: "btn btn-secondary" %>
+        <% end %>
+      </div>
+    </div>
+
+
+
+  <% end %>
+</div>

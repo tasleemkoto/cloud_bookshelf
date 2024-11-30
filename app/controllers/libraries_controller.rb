@@ -50,6 +50,6 @@ class LibrariesController < ApplicationController
   private
 
   def library_params
-    params.require(:library).permit(:name, :unique_id)
+    params.require(:library).permit(:name, :unique_id, :photo)
   end
 end

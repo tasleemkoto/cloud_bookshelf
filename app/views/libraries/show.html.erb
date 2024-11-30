@@ -1,14 +1,18 @@
 
-<h1><%= @library.name %></h1>
-<p><strong>Unique ID:</strong> <%= @library.unique_id %></p>
 
-<h3>Manage library:</h3>
-<div class="container">
+<div class="library-show">
+  <h1>Welcome to <%= @library.name %></h1>
+  <p><strong>Unique IDc for this library :</strong> <%= @library.unique_id %></p>
+  <h3>Manage your library:</h3>
+
+
+  <div class="container-library-show">
     <%= link_to "Add Book"  %>
 
-    <%= link_to "Manage Users", library_library_users_path(@library) %>
+   <%= link_to "Manage Users", library_library_users_path(@library) %>
 
     <%# Implement link to redirect to /libraries/:id/books %>
-<%= link_to "Back to Libraries", libraries_path %>
+    <%= link_to "Back to Libraries", libraries_path %>
 
+  </div>
 </div>

@@ -8,7 +8,7 @@ class Library < ApplicationRecord
   has_many :notifications, dependent: :destroy
   # belongs_to :user
   # before_destroy :delete_associated_books
-
+  has_one_attached :photo
   validates :name, presence: true, uniqueness: true
   validates :unique_id, presence: true, uniqueness: true
 
