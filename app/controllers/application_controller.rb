@@ -6,6 +6,11 @@ class ApplicationController < ActionController::Base
   after_action :verify_authorized, except: :index, unless: :skip_pundit?
   after_action :verify_policy_scoped, only: :index, unless: :skip_pundit?
 
+  def after_sign_in_path_for(resource)
+    # If the user is logged in, redirect to the user dashboard
+    library_user_dashboard_path(resource.library) # Assuming you have a library linked to the user
+  end
+
   # Uncomment when you *really understand* Pundit!
   # rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   def user_not_authorized

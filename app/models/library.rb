@@ -6,13 +6,13 @@ class Library < ApplicationRecord
   has_many :users, through: :library_users
   has_many :checkouts, dependent: :destroy
   has_many :notifications, dependent: :destroy
-
+  # belongs_to :user
   # before_destroy :delete_associated_books
 
   validates :name, presence: true, uniqueness: true
   validates :unique_id, presence: true, uniqueness: true
 
-  #callbacks
+  # callbacks
   before_validation :generate_unique_id, on: :create
 
   private
