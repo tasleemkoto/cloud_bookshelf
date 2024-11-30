@@ -2,6 +2,7 @@ class Libraries::AdminDashboardsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_library
   after_action :verify_authorized
+  layout "dashboard"
 
   # Displays the admin dashboard for a specific library.
   # - Authorizes the `admin_dashboard?` policy to ensure the user is an admin of the library.
