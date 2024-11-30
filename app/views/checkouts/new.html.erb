@@ -1,60 +1,41 @@
-<h1>Book Checkout</h1>
+<h1>New Checkout</h1>
+<%= simple_form_for @checkout, url: checkouts_path do |f| %>
+  <%= f.error_notification %>
 
-<%= form_with model: @checkout, local: true do |f| %>
-  <% if @checkout.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@checkout.errors.count, "information missing,") %> checkout couldn't be saved. All fields need to be filled:</h2>
-      <ul>
-        <% @checkout.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <!-- User Selection -->
-  <div>
-    <%= f.label :user_id, "User Email" %>
-    <%= f.collection_select :user_id, User.all, :id, :email, prompt: "Select a user" %>
+<!-- Select User -->
+  <div class="form-group">
+    <%= f.association :user, collection: User.all.pluck(:email, :id),
+                      label: "Select a User",
+                      prompt: "Choose a user" %>
   </div>
 
-  <!-- Books and Dates -->
-  <h3>Books</h3>
-  <div id="books-container">
-    <div class="book-entry">
-      <label for="book_id_1">Book</label>
-      <select name="books[][book_id]" id="book_id_1">
-        <option value="">Select a Book</option>
-        <% Book.all.each do |book| %>
-          <option value="<%= book.id %>"><%= book.title %></option>
-        <% end %>
-      </select>
-      <%= label_tag "start_date_1", "Start Date" %>
-      <%= date_field_tag "books[][start_date]", Date.today, id: "start_date_1" %>
-      <%= label_tag "due_date_1", "Due Date" %>
-      <%= date_field_tag "books[][due_date]", Date.today + 7 , id: "due_date_1" %>
-    </div>
+  <!-- Select Book -->
+
+  <div class="form-group">
+    <%= f.association :book, collection: Book.where(status: "available"),
+                      label: "Select a Book",
+                      prompt: "Choose a book" %>
   </div>
 
-<!-- Book Selection -->
-  <div>
-    <%= f.label :book_id, "Book Title" %>
-    <%= f.collection_select :book_id, Book.all, :id, :title, prompt: "Select a Book", selected: params[:book_id], onchange: 'this.form.submit();' %>
+<!-- Start Date -->
+
+  <div class="form-group">
+    <%= f.input :start_date, as: :string,
+                label: "Start Date",
+                input_html: { type: "date", value: Date.today } %>
   </div>
 
-  <!-- Book Details -->
-  <% if params[:book_id].present? %>
-    <% book = Book.find(params[:book_id]) %>
-    <div id="book-details">
-      <p><strong>Author:</strong> <%= book.author %></p>
-      <p><strong>Availability:</strong> <%= book.status == "Available" ? "Yes" : "No" %></p>
-      <p><strong>Quantity:</strong> <%= book.quantity %></p>
-    </div>
-  <% end %>
+<!-- Due User -->
 
-  <!-- Submit Button -->
-  <div style="margin-top: 20px;">
-    <%= f.submit "Create Checkout", class: 'btn btn-primary' %>
-    <%= link_to 'Back', checkouts_path, class: 'btn btn-secondary' %>
+  <div class="form-group">
+    <%= f.input :due_date, as: :string,
+                label: "Due Date",
+                input_html: { type: "date", value: Date.today + 7 } %>
+  </div>
+
+<!-- Submit Button -->
+
+  <div class="form-actions">
+    <%= f.button :submit, "Create Checkout", class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -7,21 +7,19 @@ class CheckoutsController < ApplicationController
 
   def new
     @checkout = Checkout.new
+
   end
 
   def create
     @checkout = Checkout.new(checkout_params)
-
-    # Debugging: print parameters to console
-    logger.debug "Checkout Params: #{checkout_params.inspect}"
+    @checkout.user = current_user
+    @checkout.library = current_user.libraries.first
+    @checkout.status = :not_yet_returned # Set the initial status
 
     if @checkout.save
-      @checkout.book.update(status: "CheckedOut")
-      redirect_to @checkout, notice: 'Checkout was successfully created.'
+      redirect_to checkouts_path, notice: "Checkouts successfully created."
     else
-    # Log validation errors
-      logger.debug "Checkout Save Failed: #{@checkout.errors.full_messages}"
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -30,10 +28,9 @@ class CheckoutsController < ApplicationController
 
   def update
     if @checkout.update(checkout_params)
-      @checkout.book.update(status: "CheckedOut")
       redirect_to @checkout, notice: 'Checkout successfully updated!'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -43,6 +40,15 @@ class CheckoutsController < ApplicationController
     redirect_to checkouts_url, notice: 'Checkout was successfully destroyed.'
   end
 
+  def return
+    @checkout = Checkout.find(params[:id])
+    if @checkout.update(status: "returned")
+      redirect_to checkouts_path, notice: "Book successfully returned."
+    else
+      redirect_to checkouts_path, alert: "Unable to return the book."
+    end
+  end
+
   private
 
   def set_checkout
@@ -50,6 +56,6 @@ class CheckoutsController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned)
+    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned, :library_id)
   end
 end

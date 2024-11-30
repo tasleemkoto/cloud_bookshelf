@@ -6,7 +6,7 @@ class Checkout < ApplicationRecord
   validates :start_date, :due_date, presence: true
 
   #enumerations:
-  enum status: { pending: 0, approved: 1, returned: 2, denied: 3 }
+  enum status: { pending: 0, approved: 1, returned: 2, denied: 3, not_yet_returned: 4 }
 
   #scopes
   scope :current_reservations, -> { where(is_returned: false).order(created_at: :asc) }

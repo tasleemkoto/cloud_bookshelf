@@ -6,7 +6,7 @@ class LibrariesController < ApplicationController
 
   def show
     @library = Library.find(params[:id])
-    authorize @library
+    # authorize @library
   end
 
   def new
