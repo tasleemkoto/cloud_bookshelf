@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  
+
   devise_for :users
   root "pages#home"
 
+  resources :library_users, only: :create
+  
   resources :libraries do
     # Creates RESTful routes for libraries (index, show, new, create, edit, update, destroy).
     # Additional custom routes are added below for specific library-related functionality.
@@ -93,7 +95,7 @@ Rails.application.routes.draw do
   patch "checkouts/:id/approve_reservation", to: "admin_dashboard#approve_reservation", as: "approve_reservation"
 
   patch "checkouts/:id/deny_reservation", to: "admin_dashboard#deny_reservation", as: "deny_reservation"
-  
+
   # Notifications routes
   resources :notifications, only: [:create]
   # Creates a route for creating notifications:

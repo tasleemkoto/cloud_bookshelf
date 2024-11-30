@@ -1,7 +1,7 @@
 class LibraryUsersController < ApplicationController
-  before_action :set_library
+  before_action :set_library, except: [:create]
   before_action :set_library_user, only: [:edit, :update, :destroy]
-  before_action :authorize_library_user, only: [:create, :edit, :update, :destroy]
+  before_action :authorize_library_user, only: [:edit, :update, :destroy]
 
   def index
     @library_users = @library.library_users.all
@@ -14,12 +14,18 @@ class LibraryUsersController < ApplicationController
   end
 
   def create
-    # @library_user = @library.library_users.new(library_user_params)
-    # if @library_user.save
-    #   redirect_to library_library_users_path(@library), notice: 'Library User added successfully.'
-    # else
-    #   render :new, status: :unprocessable_entity
-    # end
+    @library_user = LibraryUser.new
+    authorize @library_user
+    @library = Library.find_by(unique_id: params[:unique_id])
+    if @library
+      @library_user.library = @library
+      @library_user.user = current_user
+      @library_user.save
+      redirect_to library_path(@library)
+    else
+      redirect_to root_path, notice: "No library found with this ID"
+    end
+
   end
 
   def edit

@@ -6,7 +6,8 @@ class LibrariesController < ApplicationController
 
   def show
     @library = Library.find(params[:id])
-    # authorize @library
+    authorize @library
+
   end
 
   def new
@@ -19,6 +20,7 @@ class LibrariesController < ApplicationController
     @library.user = current_user
     authorize @library
     if @library.save
+      @library_user = LibraryUser.new(library: @library, user: current_user)
       redirect_to @library, notice: 'Library was successfully created.'
     else
       render :new, status: :unprocessable_entity
