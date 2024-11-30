@@ -1,4 +1,27 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+ <%# welcome %>
+<div class="welcome-section">
+  <h1>Welcome, <%= current_user.email %>!</h1>
+  <p>Explore your libraries and see what's new!.</p>
+</div>
+
+<div class="actions">
+  <%= link_to "Create a Library", new_library_path, class: "btn btn-primary" %>
+  <%= link_to "Access a Library", libraries_path, class: "btn btn-secondary" %>
+</div>
 
 
+<%# Notifications Section %>
+<div class="notifications-section">
+  <h2>Recent Notifications</h2>
+  <% if current_user.notifications.any? %>
+    <ul>
+      <% current_user.notifications.order(created_at: :desc).limit(10).each do |notification| %>
+        <li>
+          <p><%= notification.content %> - <%= time_ago_in_words(notification.created_at) %> ago</p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No notifications yet. Stay tuned for updates!</p>
+  <% end %>
+</div>

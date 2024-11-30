@@ -18,11 +18,18 @@ class ApplicationController < ActionController::Base
     redirect_to(root_path)
   end
 
+  def after_sign_in_path_for(resource)
+    if resource.library.present?
+      admin_dashboard_library_path(resource.library)
+    else
+      root_path
+    end
+  end
+
   private
 
   def skip_pundit?
-    # devise_controller? || params[:controller] =~ /(^(rails_)?admin)|(^pages$)/
-    true
+    devise_controller? || params[:controller] =~ /(^(rails_)?admin)|(^pages$)/
   end
 
 end

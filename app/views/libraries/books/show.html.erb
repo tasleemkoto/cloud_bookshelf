@@ -1,2 +1,7 @@
-<h1>Libraries::Books#show</h1>
-<p>Find me in app/views/libraries/books/show.html.erb</p>
+<%= link_to "edit", edit_library_book_path %>
+<%= link_to "catalogue", library_books_path(:library)%>
+
+<h1><%= @book.title %></h1>
+<p><strong> Author: </strong> <%= @book.author %></p>
+<p><strong> Genre: </strong> <%= @book.genre%> </p>
+<p><strong> Year: </strong> <%= @book.year%> </p>

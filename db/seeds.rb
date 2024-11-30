@@ -132,7 +132,8 @@ puts "Creating library..."
 # Library created by the librarian (library-specific admin)
 library1 = Library.create!(
   name: 'Central Library',
-  unique_id: SecureRandom.uuid
+  unique_id: "password1234",
+  user: librarian
 )
 
 # Assign librarian as library-specific admin
