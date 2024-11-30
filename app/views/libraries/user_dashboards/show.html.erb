@@ -1,0 +1,68 @@
+<h1>Welcome to Your Dashboard</h1>
+
+<h2>Library: <%= @library.name %></h2>
+
+<%# Books Section %>
+<% if @books.any? %>
+  <h3>Available Books</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <td><%= link_to book.title, book_path(book) %></td>
+          <td><%= book.author %></td>
+          <td><%= book.genre %></td>
+          <td><%= button_to 'Reserve', reserve_book_path(book), method: :post %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No books found in this library.</p>
+<% end %>
+
+<%# Notifications Section %>
+<% if @notifications.any? %>
+  <h3>Notifications</h3>
+  <ul>
+    <% @notifications.each do |notification| %>
+      <li><%= notification.message %> - <%= notification.created_at.strftime("%Y-%m-%d %H:%M") %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No notifications available.</p>
+<% end %>
+
+<%# Wishlist Section %>
+<% if @wishlist_books.any? %>
+  <h3>Your Wishlist</h3>
+  <ul>
+    <% @wishlist_books.each do |book| %>
+      <li><%= link_to book.title, book_path(book) %> - <%= book.author %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Your wishlist is empty. Add books to your wishlist to see them here.</p>
+<% end %>
+
+<%# Approved Reservations Section %>
+<% if @approved_reservations.any? %>
+  <h3>Approved Reservations</h3>
+  <ul>
+    <% @approved_reservations.each do |checkout| %>
+      <li><strong>Title:</strong> <%= checkout.book.title %> | <strong>Approved on:</strong> <%= checkout.created_at.strftime("%Y-%m-%d %H:%M") %></li>
+    <% end %>
+  </ul>
+  <p>You can retrieve the approved books from the library.</p>
+<% else %>
+  <p>No approved reservations yet.</p>
+<% end %>
+

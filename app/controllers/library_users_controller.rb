@@ -1,7 +1,7 @@
 class LibraryUsersController < ApplicationController
   before_action :set_library
   before_action :set_library_user, only: [:edit, :update, :destroy]
-  before_action :authorize_library_user, only: [:new, :create, :edit, :update, :destroy]
+  before_action :authorize_library_user, only: [:create, :edit, :update, :destroy]
 
   def index
     @library_users = @library.library_users.all
@@ -9,7 +9,8 @@ class LibraryUsersController < ApplicationController
   end
 
   def new
-    @library_user = @library.library_users.new
+    @library_user = LibraryUser.new(library: @library)
+    authorize @library_user
   end
 
   def create
@@ -52,6 +53,6 @@ class LibraryUsersController < ApplicationController
   end
 
   def authorize_library_user
-    authorize @library_user 
+    authorize @library_user
   end
 end

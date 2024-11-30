@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       # Handles the logic to access a library based on the unique ID provided in the form.
     end
 
+    resources :library_users, only: [:index, :new]
     # Nested resources for books
     resources :books, controller: 'libraries/books', only: [:index, :show, :new, :create, :edit, :update, :destroy] do
       # Defines nested RESTful routes for books within libraries.
@@ -102,21 +103,4 @@ Rails.application.routes.draw do
   resources :notifications, only: [:create]
   # Creates a route for creating notifications:
   # - POST /notifications (create action)
-
-  # Health check route
-  get "up", to: "rails/health#show", as: :rails_health_check
-  # Route: GET /up
-  # Used for application health checks, often to ensure that the app is running.
-  # Calls the `show` action in the `Rails::HealthController`.
-  # The route is named `rails_health_check` for easy reference.
 end
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  # get "up" => "rails/health#show", as: :rails_health_check
-
-  # Defines the root path route ("/")
-  # root "posts#index"
-  

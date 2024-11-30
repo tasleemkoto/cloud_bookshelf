@@ -2,20 +2,24 @@ class CheckoutsController < ApplicationController
   before_action :set_checkout, only: [:edit, :update, :destroy]
 
   def index
-    @checkouts = Checkout.includes(:user).all
+    @checkouts = Checkout.includes(:user, :book).all
   end
 
   def new
     @checkout = Checkout.new
+
   end
 
   def create
     @checkout = Checkout.new(checkout_params)
+    @checkout.user = current_user
+    @checkout.library = current_user.libraries.first
+    @checkout.status = :not_yet_returned # Set the initial status
+
     if @checkout.save
-      create_checkout_books
-      redirect_to checkouts_path, notice: 'Checkout was successfully created.'
+      redirect_to checkouts_path, notice: "Checkouts successfully created."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -26,13 +30,23 @@ class CheckoutsController < ApplicationController
     if @checkout.update(checkout_params)
       redirect_to @checkout, notice: 'Checkout successfully updated!'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    @checkout.book.update(status: "Available")
     @checkout.destroy
     redirect_to checkouts_url, notice: 'Checkout was successfully destroyed.'
+  end
+
+  def return
+    @checkout = Checkout.find(params[:id])
+    if @checkout.update(status: "returned")
+      redirect_to checkouts_path, notice: "Book successfully returned."
+    else
+      redirect_to checkouts_path, alert: "Unable to return the book."
+    end
   end
 
   private
@@ -42,24 +56,6 @@ class CheckoutsController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:user_id)
+    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned, :library_id)
   end
-
-  def books_params
-    params[:books]&.map do |book|
-      book.permit(:book_id, :start_date, :due_date)
-    end || []
-  end
-
-  def create_checkout_books
-    books_params.each do |book|
-      CheckoutBook.create(
-        checkout_id: @checkout.id,
-        book_id: book[:book_id],
-        start_date: book[:start_date],
-        due_date: book[:due_date]
-      )
-    end
-  end
-
 end
