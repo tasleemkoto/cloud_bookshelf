@@ -49,6 +49,7 @@ Rails.application.routes.draw do
       # Handles the logic to access a library based on the unique ID provided in the form.
     end
 
+    resources :library_users, only: [:index, :new]
     # Nested resources for books
     resources :books, controller: 'libraries/books', only: [:index, :show, :new, :create, :edit, :update, :destroy] do
       # Defines nested RESTful routes for books within libraries.
