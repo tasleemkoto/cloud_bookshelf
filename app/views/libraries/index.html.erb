@@ -1,29 +1,28 @@
-<h1>Libraries</h1>
 
-<% if policy(Library).create? %>
-  <%= link_to "Add New Library", new_library_path, class: "btn btn-primary" %>
+<h1>Your Libraries</h1>
+
+<%# Libraries Table Section %>
+<% if @libraries.any? %>
+  <table class="table table-bordered my-3">
+    <thead>
+      <tr>
+        <th>Library Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @libraries.each do |library| %>
+        <tr>
+          <td><%= library.name %></td>
+          <td>
+            <%= link_to 'View', library_path(library), class: 'btn btn-primary' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You are not associated with any libraries. Consider joining or creating a library.</p>
 <% end %>
 
-<div class="container gap-3">
-  <% @libraries.each do |library| %>
-    <div class="card-library d-flex p-3 rounded-4 my-3" >
-      <div>
-       <% if library.photo.attached? %>
-        <%= cl_image_tag library.photo.key, class: "rounded-4"%>
-        <% else %>
-        <p>no photo</p>
-       <% end %>
-      </div>
-
-      <div class="ms-3">
-       <h4><%= library.name %></h4>
-       <% if policy(library).show? %>
-        <%= link_to "View", library_path(library), class: "btn btn-secondary" %>
-        <% end %>
-      </div>
-    </div>
-
-
-
-  <% end %>
-</div>
+<%= link_to "Back to home", root_path %>

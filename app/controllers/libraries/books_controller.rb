@@ -2,25 +2,25 @@ class Libraries::BooksController < ApplicationController
    before_action :set_book, only: [:show, :edit, :update, :destroy]
   def index
     set_library
-    # authorize @library, :show?
+    authorize @library, :show?
     @books = @library.books
   end
 
   def show
-    # authorize @book
+    authorize @book
     @reviews = @book.reviews.new
     # @pending_reservation = @book.reservations.find_by(user: current_user, status: "pending")
     # @book = Book.find(params[:id])
   end
 
   def new
-    # authorize @book
+    authorize @book
     @book =@library.books.new
   end
 
   def create
     @book = @library.books.new(book_params)
-    # authorize @book
+    authorize @book
     if book.save
       redirect_to library_book_path(@library), notice: "added"
     else
@@ -33,7 +33,7 @@ class Libraries::BooksController < ApplicationController
   end
 
   def update
-    # authorize @book
+    authorize @book
     if book.update(book_params)
       redirect_to library_book_path(@library, @book), notice: "updated"
     else
@@ -42,7 +42,7 @@ class Libraries::BooksController < ApplicationController
   end
 
   def destroy
-    # authorize @book
+    authorize @book
     @book.destroy
     redirect_to library_book_path(@library), notice: "deleted"
   end
@@ -93,7 +93,7 @@ class Libraries::BooksController < ApplicationController
   private
 
   def set_library
-    # authorize @library
+    Rails.logger.debug "Params: #{params.inspect}" # Logs the params for debugging.
     @library = Library.find(params[:library_id])
   end
 
@@ -116,14 +116,5 @@ class Libraries::BooksController < ApplicationController
   #       quantity: book.quantity
   #     }
   #   end
-  # end
-
-  private
-  def set_book
-    @book = Book.find(params[:id])
-  end
-
-  def book_params
-   params.require(:book).permit(:title, :summary, :author, :genre, :year, :format, :availability, :location, :qr_code, :photo, :quantity, :status, :view_count)
-  end
 end
+
