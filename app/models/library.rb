@@ -1,5 +1,6 @@
 class Library < ApplicationRecord
   # association
+  belongs_to :user
   has_many :books, dependent: :destroy
   has_many :library_users, dependent: :destroy
   has_many :users, through: :library_users

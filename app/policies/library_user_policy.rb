@@ -6,6 +6,9 @@ class LibraryUserPolicy < ApplicationPolicy
     # Calls the private `user_is_admin?` method to check if the current user is an admin of the library.
   end
 
+  def new?
+    record.library == user.library
+  end
   private
 
   # Checks if the user is an admin of the library associated with the LibraryUser record
