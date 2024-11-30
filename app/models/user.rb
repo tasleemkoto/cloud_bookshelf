@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   # Associations
+  has_one :library
   has_many :library_users
   has_many :books
   has_many :checkouts
@@ -15,7 +16,7 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   # validates :email_confirmation, presence: true, if: :email_changed?
-  
+
   #instance method
   def library_admin?(library)
     library_users.exists?(library: library, is_admin: true)

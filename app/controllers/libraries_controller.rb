@@ -16,6 +16,7 @@ class LibrariesController < ApplicationController
 
   def create
     @library = Library.new(library_params)
+    @library.user = current_user
     authorize @library
     if @library.save
       redirect_to @library, notice: 'Library was successfully created.'

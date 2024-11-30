@@ -25,7 +25,7 @@ class LibraryPolicy < ApplicationPolicy
 
   # Allows a user to view the library if they are a member
   def show?
-    user.library_users.exists?(library: record)
+    user.library_users.exists?(library: record) || user.library == record
     # Determines if the user can view the library details.
     # Returns `true` if the user is a member of the library (`record`).
   end
