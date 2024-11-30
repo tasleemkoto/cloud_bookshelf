@@ -27,15 +27,6 @@ Rails.application.routes.draw do
       # Displays a user-specific dashboard for a library using the `show` action in
       # the `Libraries::UserDashboardsController`.
 
-      patch :approve_reservation, to: 'libraries/admin_dashboards#approve_reservation'
-      # Route: PATCH /libraries/:id/approve_reservation
-      # Handles logic to approve a book reservation in the library via the `approve_reservation`
-      # action in `Libraries::AdminDashboardsController`.
-
-      patch :deny_reservation, to: 'libraries/admin_dashboards#deny_reservation'
-      # Route: PATCH /libraries/:id/deny_reservation
-      # Handles logic to deny a book reservation in the library via the `deny_reservation`
-      # action in `Libraries::AdminDashboardsController`.
     end
 
     # Collection routes for accessing libraries by unique ID
@@ -99,6 +90,10 @@ Rails.application.routes.draw do
     # Marks a specific book as returned via the `return` action.
   end
 
+  patch "checkouts/:id/approve_reservation", to: "admin_dashboard#approve_reservation", as: "approve_reservation"
+
+  patch "checkouts/:id/deny_reservation", to: "admin_dashboard#deny_reservation", as: "deny_reservation"
+  
   # Notifications routes
   resources :notifications, only: [:create]
   # Creates a route for creating notifications:

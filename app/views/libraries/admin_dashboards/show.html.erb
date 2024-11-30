@@ -27,10 +27,10 @@
           <td><%= book.status %></td>
           <td>
             <%= link_to 'Show', library_book_path(@library, book) %>
-            <% if policy(@library).update?(book) %>
+            <% if policy(@library).update? %>
               <%= link_to 'Edit', edit_library_book_path(@library, book) %>
             <% end %>
-            <% if policy(@library).destroy?(book) %>
+            <% if policy(@library).destroy? %>
               <%= link_to 'Delete', library_book_path(@library, book), method: :delete, data: { confirm: 'Are you sure?' } %>
             <% end %>
           </td>
@@ -42,21 +42,21 @@
 <% else %>
   <p>No books found in this library.</p>
 <% end %>
-
+<!-- 
 <%# Notifications Section %>
 <h2>Notifications</h2>
-<%= render 'notifications/form', library: @library %>
+<%#= render 'notifications/form', library: @library %>
 <h3>Recent Notifications</h3>
 <% if @library.notifications.any? %>
   <ul>
     <% @library.notifications.order(created_at: :desc).limit(10).each do |notification| %>
-      <li><%= notification.content %> - <%= notification.created_at.strftime('%B %d, %Y') %></li>
+      <li><%#= notification.content %> - <%= notification.created_at.strftime('%B %d, %Y') %></li>
     <% end %>
   </ul>
 <% else %>
   <p>No notifications available.</p>
 <% end %>
-
+-->
 <%# Pending Reservations Section %>
 <h2>Pending Reservations</h2>
 <% if @pending_checkouts.any? %>
@@ -76,8 +76,8 @@
           <td><%= checkout.user.email %></td>
           <td><%= checkout.status %></td>
           <td>
-            <%= link_to 'Approve', approve_reservation_library_checkout_path(@library, checkout), method: :patch %>
-            <%= link_to 'Deny', deny_reservation_library_checkout_path(@library, checkout), method: :patch %>
+            <%= link_to 'Approve', approve_reservation_path(checkout), method: :patch %>
+            <%= link_to 'Deny', deny_reservation_path(checkout), method: :patch %>
           </td>
         </tr>
       <% end %>

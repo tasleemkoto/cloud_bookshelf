@@ -10,3 +10,47 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(14, 1fr); /* Assuming a 12-column grid, adjust as needed */
+    height: 100%;
+    background-color: $blue;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+.container_dashboard {
+    margin: var(--header-height) 0 0 0;
+  }
+
+.content-area-layout {
+    grid-column: span 12;
+    background-color: white;
+    border-radius: 5px;
+    margin: 0;
+  }
+
+
+.sidebar-layout {
+    grid-column: span 2;
+    background-color: $blue;
+  }
+

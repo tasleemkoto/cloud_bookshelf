@@ -1,7 +1,6 @@
 class Libraries::AdminDashboardsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_library
-  after_action :verify_authorized
+  
   layout "dashboard"
 
   # Displays the admin dashboard for a specific library.
@@ -11,7 +10,7 @@ class Libraries::AdminDashboardsController < ApplicationController
   # - Loads all notifications for the library, ordered by the most recent first.
   # - Loads all pending reservations (checkouts) for the library, including associated books and users.
   def show
-    # authorize @library, :admin_dashboard?
+    authorize @library, :admin_dashboard?
     
     @books = @library.books
     @users = @library.users
@@ -52,7 +51,7 @@ class Libraries::AdminDashboardsController < ApplicationController
   private
 
   def set_library
-    @library = Library.find(params[:library_id])
+    @library = Library.find(params[:id])
     authorize @library, :admin_dashboard?
   end
 end
