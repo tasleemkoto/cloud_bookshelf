@@ -1,10 +1,10 @@
 class LibraryUsersController < ApplicationController
-  before_action :set_library, except: [:create]
   before_action :set_library_user, only: [:edit, :update, :destroy]
+  before_action :set_library, except: [:create]
   before_action :authorize_library_user, only: [:edit, :update, :destroy]
 
   def index
-    @library_users = @library.library_users.all
+    @library_users = current_library.library_users.all
     # authorize @library_users
   end
 
@@ -47,7 +47,8 @@ class LibraryUsersController < ApplicationController
   private
 
   def set_library
-    @library = Library.find(params[:library_id])
+    current_library = current_user.library_id
+    # @library = Library.find(params[:library_id])
   end
 
   def set_library_user

@@ -1,5 +1,6 @@
-<h1>book Checkouts</h1>
-
+<h1>Book Checkouts History</h1>
+<h5>Past Book Checkout Records</h5>
+<%= link_to "Create New Checkout", new_checkout_path, class: "btn btn-success" %>
 <% if @checkouts.any? %>
   <table>
     <thead>
@@ -10,6 +11,7 @@
         <th style="padding: 20px;">Start Date</th>
         <th style="padding: 20px;">Due Date</th>
         <th style="padding: 20px;">Status</th>
+        <th style="padding: 20px;">Quantity</th>
         <th style="padding: 20px;">Actions</th>
       </tr>
     </thead>
@@ -22,15 +24,19 @@
           <td style="padding: 20px;"><%= checkout.start_date %></td>
           <td style="padding: 20px;"><%= checkout.due_date %></td>
           <td style="padding: 20px;"><%= checkout.status.humanize %></td>
+          <td style="padding: 20px;"><%= checkout.book.quantity %></td>
           <td>
             <% if checkout.status == "not_yet_returned" %>
               <%= button_to "Return", return_checkout_path(checkout),
                           method: :patch,
                           class: "btn btn-success" %>
+          <td><%= link_to "Edit", edit_checkout_path(checkout), class: "btn btn-primary" %></td>
             <% end %>
+
           </td>
         </tr>
       <% end %>
+      </td>
     </tbody>
   </table>
 <% else %>

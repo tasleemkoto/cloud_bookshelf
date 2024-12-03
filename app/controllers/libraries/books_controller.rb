@@ -15,7 +15,7 @@ class Libraries::BooksController < ApplicationController
 
   def new
     authorize @book
-    @book =@library.books.new
+    @book = @library.books.new
   end
 
   def create
@@ -117,4 +117,3 @@ class Libraries::BooksController < ApplicationController
   #     }
   #   end
 end
-

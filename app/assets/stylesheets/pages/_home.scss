@@ -1,1 +1,71 @@
-// Specific CSS for your home-page
+.home_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Full viewport height
+  background-color: #f0f8ff; // Light background color
+}
+
+.home_form {
+  background-color: #ffffff; // White box
+  //margin: 5rem;
+  padding: 5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow
+  text-align: center;
+  width: 100%; // Responsive design
+  max-width: 600px; // Limits the box width
+}
+
+.home_form h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333; // Darker text for better contrast
+  margin-bottom: 1.5rem;
+}
+
+.home_form .home_button {
+  display: flex;
+  justify-content: center; // Center the buttons horizontally
+  gap: 1rem; // Adds space between buttons
+  margin-top: 2.5rem;
+}
+
+.home_form .home_button a {
+  text-decoration: none;
+  color: #fff; // White text for buttons
+  background-color: #007bff; // Blue button color
+  padding: 0.7rem 1.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3; // Darker blue on hover
+  }
+}
+
+.home_form form {
+  margin-top: 1rem;
+}
+
+.home_form form input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.home_form form input[type="submit"] {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+}

@@ -4,6 +4,7 @@ class Checkout < ApplicationRecord
   belongs_to :library
 
   validates :start_date, :due_date, presence: true
+  validate :sufficient_quantity
 
   #enumerations:
   enum status: { pending: 0, approved: 1, returned: 2, denied: 3, not_yet_returned: 4 }
@@ -22,5 +23,9 @@ class Checkout < ApplicationRecord
     update!(status: "returned")
 
     book.mark_available!
+  end
+
+  def sufficient_quantity
+    errors.add(:quantity, "not available") if book.quantity < 5
   end
 end

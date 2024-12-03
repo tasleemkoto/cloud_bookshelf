@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   devise_for :users
   root "pages#home"
 
-  resources :library_users, only: :create
-  
+  resources :library_users, only: [:create, :index]
+
   resources :libraries do
     # Creates RESTful routes for libraries (index, show, new, create, edit, update, destroy).
     # Additional custom routes are added below for specific library-related functionality.
@@ -42,7 +42,7 @@ Rails.application.routes.draw do
       # Handles the logic to access a library based on the unique ID provided in the form.
     end
 
-    resources :library_users, only: [:index, :new]
+    # resources :library_users, only: [:index, :new]
     # Nested resources for books
     resources :books, controller: 'libraries/books', only: [:index, :show, :new, :create, :edit, :update, :destroy] do
       # Defines nested RESTful routes for books within libraries.

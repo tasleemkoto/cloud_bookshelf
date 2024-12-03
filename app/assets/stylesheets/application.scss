@@ -10,7 +10,8 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
-
+@import "pages/home";
+@import "components/registration_signin_out";
 html, body {
     height: 100%;
     margin: 0;
@@ -53,4 +54,3 @@ html, body {
     grid-column: span 2;
     background-color: $blue;
   }
-

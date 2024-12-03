@@ -1,13 +1,13 @@
 class CheckoutsController < ApplicationController
   before_action :set_checkout, only: [:edit, :update, :destroy]
-
+  skip_after_action :verify_authorized
   def index
+    @libraries = policy_scope(Library)
     @checkouts = Checkout.includes(:user, :book).all
   end
 
   def new
     @checkout = Checkout.new
-
   end
 
   def create
@@ -56,6 +56,6 @@ class CheckoutsController < ApplicationController
   end
 
   def checkout_params
-    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned, :library_id)
+    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned, :library_id, :quantity)
   end
 end

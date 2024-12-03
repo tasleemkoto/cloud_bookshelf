@@ -8,7 +8,12 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     # If the user is logged in, redirect to the user dashboard
-    library_user_dashboard_path(resource.library) # Assuming you have a library linked to the user
+    user_dashboard_library_path(resource.library)# Assuming you have a library linked to the user
+      if resource.library.present?
+        admin_dashboard_library_path(resource.library)
+      else
+        root_path
+      end
   end
 
   # Uncomment when you *really understand* Pundit!
@@ -18,15 +23,7 @@ class ApplicationController < ActionController::Base
     redirect_to(root_path)
   end
 
-  def after_sign_in_path_for(resource)
-    if resource.library.present?
-      admin_dashboard_library_path(resource.library)
-    else
-      root_path
-    end
-  end
-
-  private
+   private
 
   def skip_pundit?
     devise_controller? || params[:controller] =~ /(^(rails_)?admin)|(^pages$)/
