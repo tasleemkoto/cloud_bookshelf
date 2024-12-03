@@ -1,16 +1,17 @@
-<div>
-  <h1>Welcome to Cloud Bookshelf</h1>
-
-  <div>
-    <% if user_signed_in? %>
-      <%= form_with method: :post, url: library_users_path do |f| %>
-        <%= f.label :unique_id %>
-        <%= f.text_field :unique_id %>
-        <%= f.submit %>
+<div class="home_container">
+  <div class="home_form">
+    <h1>Dive into Your Cloud Bookshelf</h1>
+      <% if user_signed_in? %>
+        <%= form_with method: :post, url: library_users_path do |f| %>
+          <%= f.label :unique_id %>
+          <%= f.text_field :unique_id %>
+          <%= f.submit %>
+        <% end %>
+      <% else %>
+      <div class= home_button>
+        <%= link_to "Sign-up", new_user_registration_path  %>
+        <%= link_to "Sign-in", new_user_session_path  %>
+        </div>
       <% end %>
-    <% else %>
-      <%= link_to "sign-up", new_user_registration_path  %>
-      <%= link_to "sign-in", new_user_session_path  %>
-    <% end %>
   </div>
 </div>

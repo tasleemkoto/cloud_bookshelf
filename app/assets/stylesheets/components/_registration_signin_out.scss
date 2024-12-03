@@ -1,0 +1,83 @@
+.registration_container {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height */
+  background-color: #f9f9f9; /* Light background for the page */
+  padding: 4rem;
+}
+
+.h2, .h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333; /* Dark gray text */
+  text-align: center;
+  margin-bottom: 1.5rem; /* Space below headings */
+}
+
+.registration_container form {
+  background-color: #ffffff; /* White form background */
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  width: 100%;
+  max-width: 400px; /* Limit form width */
+  margin-bottom: 1.5rem; /* Space below form */
+}
+
+.registration_container .form-inputs {
+  display: flex;
+  flex-direction: column; /* Stack inputs vertically */
+  gap: 1rem; /* Space between inputs */
+}
+
+.registration_container .form-inputs input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.registration_container .form-inputs input:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Glow effect */
+}
+
+.registration_container .form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.registration_container .form-actions button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+}
+
+.registration_container .devise-links {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.registration_container .devise-links a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
