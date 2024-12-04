@@ -3,29 +3,28 @@ class Checkout < ApplicationRecord
   belongs_to :book
   belongs_to :library
 
+  # Enumerations
+  enum status: { pending: 0, approved: 1, returned: 2, denied: 3 }
+
+  # Validations
   validates :start_date, :due_date, presence: true
   validate :sufficient_quantity
 
-  #enumerations:
-  enum status: { pending: 0, approved: 1, returned: 2, denied: 3, not_yet_returned: 4 }
+  # Callbacks
+  after_create :decrement_book_quantity
+  after_update :restore_book_quantity, if: :returned?
 
-  #scopes
-  scope :current_reservations, -> { where(is_returned: false).order(created_at: :asc) }
-
-  scope :approved, -> { where(status: "approved") }
-
-  scope :pending, -> { where(status: "pending") }
-
-  #logic for checkouts:
-  def expire!
-    return unless pending? && created_at < 4.days.ago
-
-    update!(status: "returned")
-
-    book.mark_available!
-  end
+  private
 
   def sufficient_quantity
-    errors.add(:quantity, "not available") if book.quantity < 5
+    errors.add(:book, "is not available") if book.quantity <= 0
+  end
+
+  def decrement_book_quantity
+    book.update!(quantity: book.quantity - 1) if book.quantity.positive?
+  end
+
+  def restore_book_quantity
+    book.update!(quantity: book.quantity + 1)
   end
 end

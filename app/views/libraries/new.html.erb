@@ -1,2 +1,19 @@
-<h1>Create New Library</h1>
-<%= render 'form', library: @library %>
+<h1>Create a New Library</h1>
+
+<% if @library.errors.any? %>
+  <div class="alert alert-danger">
+    <h4>The following errors prevented the library from being saved:</h4>
+    <ul>
+      <% @library.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= simple_form_for @library do |f| %>
+  <div class="form-group">
+    <%= f.input :name, label: "Library Name" %>
+  </div>
+  <%= f.button :submit, "Create Library", class: "btn btn-primary" %>
+<% end %>

@@ -7,13 +7,20 @@ class ApplicationController < ActionController::Base
   after_action :verify_policy_scoped, only: :index, unless: :skip_pundit?
 
   def after_sign_in_path_for(resource)
-    # If the user is logged in, redirect to the user dashboard
-    user_dashboard_library_path(resource.library)# Assuming you have a library linked to the user
-      if resource.library.present?
-        admin_dashboard_library_path(resource.library)
+    # Get the first library the user is associated with (if any)
+    library = resource.libraries.first
+
+    if library.present?
+      # Redirect based on whether the user is an admin for that library
+      if resource.library_admin?(library)
+        admin_dashboard_library_path(library)
       else
-        root_path
+        user_dashboard_library_path(library)
       end
+    else
+      # Redirect to the root path if no libraries are associated
+      root_path
+    end
   end
 
   # Uncomment when you *really understand* Pundit!

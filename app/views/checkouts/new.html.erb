@@ -1,43 +1,19 @@
-<h1>New Checkout</h1>
-<%= simple_form_for @checkout, url: checkouts_path do |f| %>
-  <%= f.error_notification %>
+<h1>Reserve a Book</h1>
 
-<!-- Select User -->
-  <div class="form-group">
-    <%= f.association :user, collection: User.all.pluck(:email, :id),
-                      label: "Select a User",
-                      prompt: "Choose a user" %>
-  </div>
-</div>
-
-
-  <!-- Select Book -->
-
-  <div class="form-group">
-    <%= f.association :book, collection: Book.where(status: "available"),
-                      label: "Select a Book",
-                      prompt: "Choose a book" %>
-  </div>
-
-<!-- Start Date -->
-
-  <div class="form-group">
-    <%= f.input :start_date, as: :string,
-                label: "Start Date",
-                input_html: { type: "date", value: Date.today } %>
-  </div>
-
-<!-- Due User -->
-
-  <div class="form-group">
-    <%= f.input :due_date, as: :string,
-                label: "Due Date",
-                input_html: { type: "date", value: Date.today + 7 } %>
-  </div>
-
-<!-- Submit Button -->
-
-  <div class="form-actions">
-    <%= f.button :submit, "Create Checkout", class: "btn btn-primary" %>
-  </div>
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
 <% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+
+<%= simple_form_for @checkout do |f| %>
+  <div class="form-group">
+    <%= f.input :book_id, collection: @library.books.available, label_method: :title, value_method: :id, label: "Select a Book", prompt: "Choose a book to reserve" %>
+    <%= f.input :start_date, as: :date, label: "Start Date" %>
+    <%= f.input :due_date, as: :date, label: "Due Date" %>
+  </div>
+  <%= f.button :submit, "Reserve Book", class: 'btn btn-primary' %>
+<% end %>
+
+<%= link_to "Back to Checkouts", checkouts_path, class: 'btn btn-secondary' %>

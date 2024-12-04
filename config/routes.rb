@@ -62,16 +62,13 @@ Rails.application.routes.draw do
         # Route: GET /libraries/:library_id/books/:id/read
         # Displays the content of an eBook or other readable content for the specified book.
 
-        post :reserve
-        # (Duplicate route: consider removing or merging with the earlier `post :reserve`.)
-
         post :cancel_reservation
         # Route: POST /libraries/:library_id/books/:id/cancel_reservation
         # Handles the logic to cancel a reservation for the specified book.
       end
 
       # Reviews nested within books
-      resources :reviews, only: [:create, :destroy]
+      resources :reviews , controller: 'libraries/reviews', only: [:create, :destroy]
       # Creates routes for creating and destroying reviews for books.
       # Example:
       # - POST /libraries/:library_id/books/:book_id/reviews
@@ -79,7 +76,7 @@ Rails.application.routes.draw do
     end
 
     # Wishlists nested within libraries
-    resources :wishlists, only: [:index, :create]
+    resources :wishlists, only: [:index, :create, :destroy]
     # Creates routes for managing wishlists within libraries:
     # - GET /libraries/:library_id/wishlists (index action)
     # - POST /libraries/:library_id/wishlists (create action)
