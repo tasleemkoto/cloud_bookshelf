@@ -1,2 +1,37 @@
-<h1>Wishlists#index</h1>
-<p>Find me in app/views/wishlists/index.html.erb</p>
+<h1>Your Wishlist for <%= @library.name %></h1>
+
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+
+
+<% if @wishlists.any? %>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @wishlists.each do |wishlist| %>
+        <tr>
+          <td><%= wishlist.book.title %></td>
+          <td>
+            <%= link_to 'View Details', library_book_path(@library, wishlist.book), class: 'btn btn-info btn-sm' %>
+            <%= link_to 'Remove', library_wishlist_path(@library, wishlist), method: :delete,
+              data: { turbo_method: 'delete', turbo_confirm: 'Are you sure?' },
+              class: 'btn btn-danger' %>
+
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Your wishlist is currently empty. Start adding books you like!</p>
+<% end %>
+<%= link_to 'Back to Library', user_dashboard_library_path(@library), class: 'btn btn-secondary' %>

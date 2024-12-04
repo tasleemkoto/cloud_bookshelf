@@ -1,17 +1,39 @@
-<div class="home_container">
-  <div class="home_form">
-    <h1>Dive into Your Cloud Bookshelf</h1>
-      <% if user_signed_in? %>
-        <%= form_with method: :post, url: library_users_path do |f| %>
-          <%= f.label :unique_id %>
-          <%= f.text_field :unique_id %>
-          <%= f.submit %>
-        <% end %>
-      <% else %>
-      <div class= home_button>
-        <%= link_to "Sign-up", new_user_registration_path  %>
-        <%= link_to "Sign-in", new_user_session_path  %>
-        </div>
+<h1>Welcome to Cloud Bookshelf</h1>
+
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+
+<h2>Your Libraries</h2>
+<% if @libraries.any? %>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Library Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @libraries.each do |library| %>
+        <tr>
+          <td><%= library.name %></td>
+          <td>
+            <%= link_to 'View Library', library_path(library), class: 'btn btn-primary btn-sm' %>
+            <%= link_to 'Admin Dashboard', admin_dashboard_library_path(library), class: 'btn btn-warning btn-sm' if current_user.library_admin?(library) %>
+          </td>
+        </tr>
       <% end %>
-  </div>
+    </tbody>
+  </table>
+<% else %>
+  <p>You are not part of any libraries yet. Join or create a library to get started!</p>
+<% end %>
+
+<h2>Options</h2>
+<div class="mt-3">
+  <%= link_to 'Create a Library', new_library_path, class: 'btn btn-success' %>
+  <%= link_to 'Access a Library', access_form_libraries_path, class: 'btn btn-info' %>
 </div>
