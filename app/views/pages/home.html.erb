@@ -1,4 +1,6 @@
-<h1>Welcome to Cloud Bookshelf</h1>
+
+<div class=home_container>
+<h1 class=hme>Welcome to Cloud Bookshelf</h1>
 
 <% if flash[:notice] %>
   <p class="alert alert-success"><%= flash[:notice] %></p>
@@ -7,7 +9,7 @@
   <p class="alert alert-danger"><%= flash[:alert] %></p>
 <% end %>
 
-<h2>Your Libraries</h2>
+<h4 class=hme1>Collaborate, organize, and explore the world of books </h4>
 <% if @libraries.any? %>
   <table class="table table-bordered">
     <thead>
@@ -29,11 +31,11 @@
     </tbody>
   </table>
 <% else %>
-  <p>You are not part of any libraries yet. Join or create a library to get started!</p>
+  <p>Join or create a library to get started!</p>
 <% end %>
 
-<h2>Options</h2>
 <div class="mt-3">
   <%= link_to 'Create a Library', new_library_path, class: 'btn btn-success' %>
   <%= link_to 'Access a Library', access_form_libraries_path, class: 'btn btn-info' %>
+</div>
 </div>
