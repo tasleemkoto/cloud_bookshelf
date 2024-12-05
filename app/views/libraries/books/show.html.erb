@@ -11,7 +11,7 @@
 <% end %>
 
 <% if policy(@book).reserve? %>
-  <%= link_to "Reserve", reserve_library_book_path(@library, @book), method: :post, class: 'btn btn-success' %>
+  <%= link_to "Reserve", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success' %>
 <% end %>
 
 <h2>Reviews</h2>

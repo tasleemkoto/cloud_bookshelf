@@ -12,15 +12,44 @@ class CheckoutsController < ApplicationController
   end
 
   def create
-    @checkout = current_user.checkouts.new(checkout_params)
+    @library = Library.find(params[:library_id])
+    @book = Book.find(params[:id])
+    @checkout = current_user.checkouts.new(library: @library, book: @book)
     @checkout.status = :pending
     authorize @checkout
 
     if @checkout.save
-      redirect_to checkouts_path, notice: "Reservation request submitted."
+      redirect_to user_dashboard_library_path(@library), notice: "Reservation request submitted."
     else
       render :new
     end
+  end
+
+  def approve_reservation
+    @checkout = Checkout.find(params[:id])
+    authorize @checkout, :approve_reservation?
+    if @checkout.update(status: "approved")
+      @checkout.book.decrement!(:quantity)
+      flash[:notice] = "Reservation approved successfully."
+    else
+      raise
+      flash[:alert] = "Could not approve the reservation."
+    end
+    @library = @checkout.book.library
+    redirect_to admin_dashboard_library_path(@library)
+  end
+
+  def deny_reservation
+    @checkout = Checkout.find(params[:id])
+    authorize @checkout, :deny_reservation?
+
+    if @checkout.update(status: :denied)
+      flash[:notice] = "Reservation denied successfully."
+    else
+      flash[:alert] = "Could not deny the reservation."
+    end
+    @library = @checkout.book.library
+    redirect_to admin_dashboard_library_path(@library)
   end
 
   def return

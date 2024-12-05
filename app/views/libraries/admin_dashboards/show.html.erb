@@ -57,8 +57,8 @@
           <td><%= checkout.book.title %></td>
           <td><%= checkout.created_at.strftime('%Y-%m-%d') %></td>
           <td>
-            <%= link_to 'Approve', approve_reservation_path(checkout.id), method: :patch, class: 'btn btn-success btn-sm' %>
-            <%= link_to 'Deny', deny_reservation_path(checkout.id), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+            <%= link_to 'Approve', approve_reservation_path(checkout), data: { turbo_method: :patch}, class: 'btn btn-success btn-sm' %>
+            <%= link_to 'Deny', deny_reservation_path(checkout.id), data: { turbo_method: :patch, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
 
           </td>
         </tr>

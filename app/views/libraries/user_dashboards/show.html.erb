@@ -28,9 +28,7 @@
           <td><%= book.status.humanize %></td>
           <td>
             <%= link_to 'View Details', library_book_path(@library, book), class: 'btn btn-info btn-sm' %>
-            <% if policy(book).reserve? %>
-              <%= link_to 'Reserve', reserve_library_book_path(@library, book), method: :post, class: 'btn btn-success btn-sm' %>
-            <% end %>
+           
           </td>
         </tr>
       <% end %>
