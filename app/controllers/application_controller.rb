@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     # If the user is logged in, redirect to the user dashboard
-    user_dashboard_library_path(resource.library)# Assuming you have a library linked to the user
+    user_dashboard_library_path(@library)# Assuming you have a library linked to the user
       if resource.library.present?
         admin_dashboard_library_path(resource.library)
       else

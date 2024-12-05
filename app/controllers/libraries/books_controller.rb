@@ -7,6 +7,7 @@ class Libraries::BooksController < ApplicationController
   end
 
   def show
+    set_library
     authorize @book
     @reviews = @book.reviews.new
     # @pending_reservation = @book.reservations.find_by(user: current_user, status: "pending")
