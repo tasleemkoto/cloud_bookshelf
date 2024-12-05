@@ -34,7 +34,7 @@ puts "Library users assigned: #{LibraryUser.count}"
 puts "Adding books to libraries..."
 5.times do
   format = %w[ebook hardcover researchpaper].sample
-  quantity = format == 'hardcover' ? rand(1..5) : 0 # eBooks/researchpapers have no physical quantity
+  quantity = format == 'hardcover' ? rand(2..5) : 1  # eBooks/researchpapers have no physical quantity
 
   book = Book.create!(
     title: Faker::Book.title,
@@ -45,7 +45,7 @@ puts "Adding books to libraries..."
     format: format,
     library: library_1,
     user: librarian,
-    quantity: quantity # Assign only for hardcopies
+    quantity:  # Assign only for hardcopies
   )
   puts "Book created: #{book.title} (ID: #{book.id}, Quantity: #{book.quantity}, Format: #{book.format})"
 

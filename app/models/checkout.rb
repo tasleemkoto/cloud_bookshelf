@@ -7,7 +7,6 @@ class Checkout < ApplicationRecord
   enum status: { pending: 0, approved: 1, returned: 2, denied: 3 }
 
   # Validations
-  validates :start_date, :due_date, presence: true
   validate :sufficient_quantity
 
   # Callbacks
