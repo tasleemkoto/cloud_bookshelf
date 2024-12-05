@@ -97,7 +97,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_30_072105) do
     t.string "unique_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", default: 29, null: false
+    t.bigint "user_id", null: false
     t.index ["unique_id"], name: "index_libraries_on_unique_id", unique: true
     t.index ["user_id"], name: "index_libraries_on_user_id"
   end
