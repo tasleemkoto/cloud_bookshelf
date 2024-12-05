@@ -1,208 +1,88 @@
-# THIS FILE SHOULD ENSURE THE EXISTENCE OF RECORDS REQUIRED TO RUN THE APPLICATION IN EVERY ENVIRONMENT (PRODUCTION,
-# DEVELOPMENT, TEST). THE CODE HERE SHOULD BE IDEMPOTENT SO THAT IT CAN BE EXECUTED AT ANY POINT IN EVERY ENVIRONMENT.
-# THE DATA CAN THEN BE LOADED WITH THE BIN/RAILS DB:SEED COMMAND (OR CREATED ALONGSIDE THE DATABASE WITH DB:SETUP).
-#
-# EXAMPLE:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-# require 'faker'
-
-# puts "Cleaning up database..."
-# Book.destroy_all
-# User.destroy_all
-# Library.destroy_all
-# puts "Database cleaned"
-
-
-
-# puts "Creating libraries..."
-# 10.times do
-#   begin
-#     Library.create!( name: Faker::Cannabis.unique.strain, unique_id: Faker::Alphanumeric.unique.alphanumeric(number: 10) )
-#   rescue ActiveRecord::RecordInvalid => e
-#     puts "Failed to create library: #{e.message}"
-#     retry
-#   end
-# end
-
-# puts "Seeded 10 libraries!"
-
-#  # 5.times do
-# #     puts "Creating books for library..."
-# #     Book.create!(
-# #       title: Faker::Book.title,
-# #       summary: Faker::Lorem.sentence,
-# #       author: Faker::Book.author,
-# #       genre: Faker::Book.genre,
-# #       year: rand(1900..Date.today.year),
-# #       format: %w[ebook hardcover researchpaper].sample, # Random valid format
-# #       availability: [true, false].sample,
-# #       location: "Shelf #{rand(1..10)}",
-# #       quantity: rand(1..5),
-# #       #library: library,
-# #       #user: default_user # Associate with the default user
-# #     )
-# #   end
-# # end
-
-
-
-# # Generate 10 users
-# 10.times do
-#   User.create!(
-#     email: Faker::Internet.unique.email,
-#     password: 'password', # Assuming you have a password field and it's required
-#     password_confirmation: 'password', # Assuming you have password confirmation
-#   )
-# end
-
-# puts "Seeded 10 users!"
-
-# # Generate 10 books
-# 10.times do
-#   Book.create!(
-#     title: Faker::Book.title,
-#     summary: Faker::Lorem.paragraph,
-#     author: Faker::Book.author,
-#     genre: Faker::Book.genre,
-#     year: Faker::Number.between(from: 1800, to: 2024),
-#     format: ["hardcover", "researchpaper", "ebook"].sample,
-#     availability: Faker::Boolean.boolean,
-#     location: Faker::Address.city,
-#     qr_code: Faker::Code.unique.asin,
-#     photo: Faker::LoremFlickr.image(size: "300x400", search_terms: ['book']),
-#     quantity: Faker::Number.between(from: 1, to: 10),
-#     status: ["Available", "Checked Out"].sample,
-#     view_count: Faker::Number.between(from: 0, to: 100),
-#     user_id: User.ids.sample,
-#     library_id: Library.ids.sample
-#     )
-#   end
-
-# puts "Seeded 10 books!"
-# puts "Seeding completed!"
-
 require 'faker'
 
-# Clear previous data
-# Review.destroy_all
-# Checkout.destroy_all
-# Book.destroy_all
-Library.destroy_all
-Notification.destroy_all
-Wishlist.destroy_all
-User.destroy_all
+# Clear old data
+puts "Clearing old data..."
+[Review, Wishlist, Notification, Checkout, Book, LibraryUser, Library, User].each(&:destroy_all)
+puts "All data cleared!"
 
+# Create users
 puts "Creating users..."
+admin = User.create!(email: 'admin@cloudbookshelf.com', password: 'password123', admin: true)
+librarian = User.create!(email: 'librarian@cloudbookshelf.com', password: 'password123')
+student_1 = User.create!(email: 'student1@cloudbookshelf.com', password: 'password123')
+student_2 = User.create!(email: 'student2@cloudbookshelf.com', password: 'password123')
 
-# CloudBookshelf Admin User
-cloudbookshelf_admin = User.create!(
-  email: 'cloudbookshelf_admin@cloudbookshelf.com',
-  password: 'password123',
-  password_confirmation: 'password123',
-  admin: true  # Application-level admin
-)
+puts "Users created: #{User.count}"
 
-# Regular Users (can be added as library-specific admins)
-librarian = User.create!(
-  email: 'librarian@cloudbookshelf.com',
-  password: 'password123',
-  password_confirmation: 'password123',
-  admin: false  # Not an application-wide admin
-)
+# Create libraries
+puts "Creating libraries..."
+library_1 = Library.create!(name: 'Central Library', user: admin)
+library_2 = Library.create!(name: 'Science Library', user: librarian)
 
-student = User.create!(
-  email: 'student@cloudbookshelf.com',
-  password: 'password123',
-  password_confirmation: 'password123',
-  admin: false
-)
+puts "Libraries created: #{Library.count}"
 
-student_2 = User.create!(
-  email: 'student2@cloudbookshelf.com',
-  password: 'password123',
-  password_confirmation: 'password123',
-  admin: false
-)
+# Assign users to libraries
+puts "Assigning users to libraries..."
+LibraryUser.create!(user: librarian, library: library_1, is_admin: true)
+LibraryUser.create!(user: student_1, library: library_1)
+LibraryUser.create!(user: student_2, library: library_1)
+LibraryUser.create!(user: librarian, library: library_2, is_admin: true)
 
-puts "Creating library..."
+puts "Library users assigned: #{LibraryUser.count}"
 
-# Library created by the librarian (library-specific admin)
-library1 = Library.create!(
-  name: 'Central Library',
-  unique_id: "password1234",
-  user: librarian
-)
-
-# Assign librarian as library-specific admin
-LibraryUser.create!(
-  user: librarian,
-  library: library1,
-  is_admin: true  # Admin for this specific library
-)
-
-# Grant access to students (non-admins)
-LibraryUser.create!(user: student, library: library1, is_admin: false)
-LibraryUser.create!(user: student_2, library: library1, is_admin: false)
-
-puts "Library created and users added"
-
-# Books, reviews, checkouts, notifications, etc.
+# Add books to libraries
+puts "Adding books to libraries..."
 5.times do
+  format = %w[ebook hardcover researchpaper].sample
+  quantity = format == 'hardcover' ? rand(1..5) : 0 # eBooks/researchpapers have no physical quantity
+
   book = Book.create!(
     title: Faker::Book.title,
+    summary: Faker::Lorem.paragraph,
     author: Faker::Book.author,
     genre: Faker::Book.genre,
-    year: Faker::Number.between(from: 1900, to: Date.today.year),
-    format: %w[ebook hardcover researchpaper].sample,
-    library: library1,
+    year: rand(1900..Date.today.year),
+    format: format,
+    library: library_1,
     user: librarian,
-    qr_code: SecureRandom.uuid,
-    quantity: Faker::Number.between(from: 1, to: 5)
+    quantity: quantity # Assign only for hardcopies
   )
+  puts "Book created: #{book.title} (ID: #{book.id}, Quantity: #{book.quantity}, Format: #{book.format})"
 
-  # Librarian creates a review
-  Review.create!(
-    user: librarian,
-    book: book,
-    rating: Faker::Number.between(from: 3, to: 5),
-    comment: Faker::Lorem.sentence
-  )
+  # Add reviews
+  [student_1, student_2].each do |student|
+    Review.create!(user: student, book: book, rating: rand(1..5), comment: Faker::Lorem.sentence)
+  end
+
+  # Add to wishlist
+  Wishlist.create!(user: student_1, book: book, library: library_1)
 end
 
-puts "Books added to library and reviewed by librarian"
+puts "Books added: #{Book.count}, Reviews added: #{Review.count}, Wishlists created: #{Wishlist.count}"
 
-# Create a checkout for a student
-Checkout.create!(
-  library_id: library1.id,
-  user: student,
-  book: Book.all.sample,
-  start_date: Date.today,
-  due_date: Date.today + 7.days
-)
+# Create checkouts for hardcopy books
+puts "Creating checkouts..."
+library_1.books.where(format: 'hardcover').each do |book|
+  if book.quantity > 0
+    Checkout.create!(
+      user: student_1,
+      book: book,
+      library: library_1,
+      start_date: Date.today,
+      due_date: Date.today + 7.days,
+      status: 'pending'
+    )
+    puts "Checkout created for book: #{book.title} (Remaining quantity: #{[book.quantity - 1, 0].max})"
+  end
+end
 
-puts "Checkout created for student"
+puts "Checkouts created: #{Checkout.count}"
 
-# Notifications, wishlist, and additional student actions
-Notification.create!(
-  library_id: library1.id,
-  user: student,
-  content: 'New books available!'
-)
+# Create notifications
+puts "Creating notifications..."
+Notification.create!(user: student_1, library: library_1, content: 'New books are now available in Central Library!')
+Notification.create!(user: librarian, library: library_1, content: 'Please review the latest reservations.')
 
-Wishlist.create!(
-  library_id: library1.id,
-  user: student,
-  book: library1.books.first
-)
-
-Review.create!(
-  user: student,
-  book: library1.books.first,
-  rating: 4,
-  comment: "Excellent resource!"
-)
+puts "Notifications created: #{Notification.count}"
 
 puts "Seed data loaded successfully!"

@@ -1,48 +1,31 @@
 class CheckoutsController < ApplicationController
-  before_action :set_checkout, only: [:edit, :update, :destroy]
-  skip_after_action :verify_authorized
+  before_action :set_checkout, only: %i[edit update destroy return]
+  before_action :authorize_checkout, only: %i[edit update destroy return]
+
   def index
-    @libraries = policy_scope(Library)
-    @checkouts = Checkout.includes(:user, :book).all
+    @checkouts = policy_scope(Checkout)
   end
 
   def new
     @checkout = Checkout.new
+    authorize @checkout
   end
 
   def create
-    @checkout = Checkout.new(checkout_params)
-    @checkout.user = current_user
-    @checkout.library = current_user.libraries.first
-    @checkout.status = :not_yet_returned # Set the initial status
+    @checkout = current_user.checkouts.new(checkout_params)
+    @checkout.status = :pending
+    authorize @checkout
 
     if @checkout.save
-      redirect_to checkouts_path, notice: "Checkouts successfully created."
+      redirect_to checkouts_path, notice: "Reservation request submitted."
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
-  end
-
-  def edit
-  end
-
-  def update
-    if @checkout.update(checkout_params)
-      redirect_to @checkout, notice: 'Checkout successfully updated!'
-    else
-      render :edit, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    @checkout.book.update(status: "Available")
-    @checkout.destroy
-    redirect_to checkouts_url, notice: 'Checkout was successfully destroyed.'
   end
 
   def return
-    @checkout = Checkout.find(params[:id])
-    if @checkout.update(status: "returned")
+    if @checkout.update(status: :returned)
+      @checkout.book.increment!(:quantity)
       redirect_to checkouts_path, notice: "Book successfully returned."
     else
       redirect_to checkouts_path, alert: "Unable to return the book."
@@ -55,7 +38,11 @@ class CheckoutsController < ApplicationController
     @checkout = Checkout.find(params[:id])
   end
 
+  def authorize_checkout
+    authorize @checkout
+  end
+
   def checkout_params
-    params.require(:checkout).permit(:user_id, :book_id, :start_date, :due_date, :is_returned, :library_id, :quantity)
+    params.require(:checkout).permit(:book_id, :library_id, :start_date, :due_date)
   end
 end
