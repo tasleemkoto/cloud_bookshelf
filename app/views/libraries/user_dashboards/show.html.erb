@@ -1,68 +1,98 @@
-<h1>Welcome to Your Dashboard</h1>
+<h1>Welcome to <%= @library.name %>, <%= current_user.email %></h1>
 
-<h2>Library: <%= @library.name %></h2>
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
 
-<%# Books Section %>
+<h2>Available Books</h2>
 <% if @books.any? %>
-  <h3>Available Books</h3>
-  <table>
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Title</th>
         <th>Author</th>
-        <th>Genre</th>
+        <th>Format</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @books.each do |book| %>
         <tr>
-          <td><%= link_to book.title, book_path(book) %></td>
+          <td><%= book.title %></td>
           <td><%= book.author %></td>
-          <td><%= book.genre %></td>
-          <td><%= button_to 'Reserve', reserve_book_path(book), method: :post %></td>
+          <td><%= book.format.capitalize %></td>
+          <td><%= book.status.humanize %></td>
+          <td>
+            <%= link_to 'View Details', library_book_path(@library, book), class: 'btn btn-info btn-sm' %>
+            <% if policy(book).reserve? %>
+              <%= link_to 'Reserve', reserve_library_book_path(@library, book), method: :post, class: 'btn btn-success btn-sm' %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 <% else %>
-  <p>No books found in this library.</p>
+  <p>No books currently available in this library.</p>
 <% end %>
 
-<%# Notifications Section %>
+<h2>Your Checkouts</h2>
+<% if @approved_checkouts.any? %>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @approved_checkouts.each do |checkout| %>
+        <tr>
+          <td><%= checkout.book.title %></td>
+          <td><%= checkout.due_date.strftime('%Y-%m-%d') %></td>
+          <td>
+            <%= link_to 'Return Book', return_checkout_path(checkout), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-warning btn-sm' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You currently have no active checkouts.</p>
+<% end %>
+
+<h2>Your Wishlist</h2>
+<% if @wishlists.any? %>
+  <ul>
+    <% @wishlists.each do |wishlist| %>
+      <li>
+        <strong><%= wishlist.book.title %></strong>
+        (<%= link_to 'View Book', library_book_path(@library, wishlist.book), class: 'btn btn-link btn-sm' %>)
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Your wishlist is empty. Start adding books to your wishlist!</p>
+<% end %>
+
+<h2>Notifications</h2>
 <% if @notifications.any? %>
-  <h3>Notifications</h3>
-  <ul>
+  <ul class="list-group">
     <% @notifications.each do |notification| %>
-      <li><%= notification.message %> - <%= notification.created_at.strftime("%Y-%m-%d %H:%M") %></li>
+      <li class="list-group-item">
+        <p><strong>Message:</strong> <%= notification.content %></p>
+        <p><strong>From:</strong> <%= notification.user.email %></p>
+        <p><small><%= notification.created_at.strftime('%B %d, %Y at %I:%M %p') %></small></p>
+      </li>
     <% end %>
   </ul>
 <% else %>
-  <p>No notifications available.</p>
+  <p>No notifications at this time.</p>
 <% end %>
 
-<%# Wishlist Section %>
-<% if @wishlist_books.any? %>
-  <h3>Your Wishlist</h3>
-  <ul>
-    <% @wishlist_books.each do |book| %>
-      <li><%= link_to book.title, book_path(book) %> - <%= book.author %></li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>Your wishlist is empty. Add books to your wishlist to see them here.</p>
-<% end %>
-
-<%# Approved Reservations Section %>
-<% if @approved_reservations.any? %>
-  <h3>Approved Reservations</h3>
-  <ul>
-    <% @approved_reservations.each do |checkout| %>
-      <li><strong>Title:</strong> <%= checkout.book.title %> | <strong>Approved on:</strong> <%= checkout.created_at.strftime("%Y-%m-%d %H:%M") %></li>
-    <% end %>
-  </ul>
-  <p>You can retrieve the approved books from the library.</p>
-<% else %>
-  <p>No approved reservations yet.</p>
-<% end %>
-
+<%= link_to "Back to Libraries", libraries_path, class: 'btn btn-secondary' %>

@@ -1,30 +1,25 @@
-<div class="library-header">
-  <h1><%= @library.name %></h1>
-  <p>Unique ID: <%= @library.unique_id %></p>
-  <p>Created at: <%= l(@library.created_at, format: :long) %></p>
-</div>
+<h1>Library: <%= @library.name %></h1>
+<p>Unique ID: <%= @library.unique_id %></p>
+<p>Created by: <%= @library.user.email %></p>
 
-<div class="library-actions">
-  <%# Button to go to the user's dashboard for the library %>
-  <%# <%= link_to 'Go to User Dashboard', library_user_dashboard_path(@library), class: 'btn btn-primary' %> %>
-
-  <% if current_user.admin? && @library.users.include?(current_user) %>
-    <%= link_to 'Access Admin Dashboard', library_admin_dashboard_path(@library), class: 'btn btn-secondary' %>
+<%# Dashboards Links Section %>
+<div class="my-3">
+  <% if policy(@library).admin_dashboard? %>
+    <%= link_to "Admin Dashboard", admin_dashboard_library_path(@library), class: "btn btn-primary" %>
   <% end %>
-
-  <%= link_to 'Back to Libraries', libraries_path, class: 'btn btn-link' %>
+  <% if policy(@library).user_dashboard? %>
+    <%= link_to "User Dashboard", user_dashboard_library_path(@library), class: "btn btn-secondary" %>
+  <% end %>
 </div>
 
-<h2>Books in <%= @library.name %></h2>
+<%# Books Table Section %>
+<h2>Books</h2>
 <% if @library.books.any? %>
   <table class="table table-bordered">
     <thead>
       <tr>
         <th>Title</th>
         <th>Author</th>
-        <th>Genre</th>
-        <th>Year</th>
-        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -33,20 +28,15 @@
         <tr>
           <td><%= book.title %></td>
           <td><%= book.author %></td>
-          <td><%= book.genre %></td>
-          <td><%= book.year %></td>
-          <td><%= book.availability ? 'Available' : 'Not Available' %></td>
           <td>
-            <%= link_to 'Show', library_book_path(book), class: 'btn btn-info' %>
-            <% if current_user.admin? %>
-              <%= link_to 'Edit', edit_book_path(book), class: 'btn btn-warning' %>
-              <%= link_to 'Delete', book_path(book), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-            <% end %>
+            <%= link_to 'View', library_book_path(@library, book), class: 'btn btn-primary btn-sm' %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 <% else %>
-  <p>No books available in this library.</p>
+  <p>No books are currently available in this library.</p>
 <% end %>
+
+<%= link_to "Back to Libraries", libraries_path, class: 'btn btn-secondary' %>

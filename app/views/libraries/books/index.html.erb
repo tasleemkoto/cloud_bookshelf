@@ -1,50 +1,42 @@
-<style>
-  .books-container {
+<h1>Books in <%= @library.name %></h1>
 
-  }
+<% if @books.any? %>
+  <table class="table table-bordered my-3">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+        <th>Format</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <td><%= book.title %></td>
+          <td><%= book.author %></td>
+          <td><%= book.genre %></td>
+          <td><%= book.format.capitalize %></td>
+          <td>
+            <%= link_to 'View', library_book_path(@library, book), class: 'btn btn-primary btn-sm' %>
+            <% if policy(book).update? %>
+              <%= link_to 'Edit', edit_library_book_path(@library, book), class: 'btn btn-warning btn-sm' %>
+            <% end %>
+            <% if policy(book).destroy? %>
+              <%= link_to 'Delete', library_book_path(@library, book), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No books available in this library.</p>
+<% end %>
 
-  .book-card {
-    width: ;
-    padding: auto;
-    border: ;
-    background-color: ;
-  }
+<% if policy(@library.books.new).create? %>
+  <%= link_to "Add New Book", new_library_book_path(@library), class: 'btn btn-success' %>
+<% end %>
 
-  .status {
-
-  }
-
-  .book-image {
-
-  }
-
-  .book-title {
-
-  }
-
-  .book-description {
-
-  }
-
-  .more-info-btn {
-
-  }
-
-</style>
-<h1>Books</h1>
-<%= link_to "dashboard", %>
-  <div class="books-container">
-    <% @books.each do |book| %>
-      <div class="book-card">
-        <div class="status"><%= book.status %>
-          <%= book.available? "Available" : "Not available" %>
-        </div>
-        <div class="book-image">
-          <img scr="" class="book-img">
-        </div>
-        <h3 class="book-title"><% book.title %></h3>
-        <p class="book-description"><% book.description %></p>
-        <%= link_to "More info", book_path, class: "more-info-btn" %>
-  </div>
-  <% end %>
-</div>
+<%= link_to "Back to Library", library_path(@library), class: 'btn btn-secondary' %>

@@ -1,44 +1,19 @@
+<h1>Edit Checkout</h1>
 
-
-
-<h1>Edit Book Checkout</h1>
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
 
 <%= simple_form_for @checkout do |f| %>
-  <% if @checkout.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@checkout.errors.count, "error") %> prohibited this checkout from being saved:</h2>
-      <ul>
-        <% @checkout.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= f.input :user_id, collection: User.all, label_method: :email, value_method: :id, prompt: "Select a User", label: "User Email" %>
+  <div class="form-group">
+    <p><strong>Book:</strong> <%= @checkout.book.title %></p>
+    <%= f.input :start_date, as: :date, label: "Start Date" %>
+    <%= f.input :due_date, as: :date, label: "Due Date" %>
   </div>
-
-  <div>
-    <%= f.input :book_id, collection: Book.all, label_method: :title, value_method: :id, prompt: "Select a Book", label: "Book" %>
-  </div>
-
-  <div>
-    <%= f.input :start_date, as: :date, input_html: { value: Date.today } %>
-  </div>
-
-  <div>
-    <%= f.input :due_date, as: :date %>
-  </div>
-
- 
-
-  <div>
-    <%= f.input :is_returned, as: :boolean, label: "Returned" %>
-  </div>
-
-  <div style="margin-top: 20px;">
-    <%= f.button :submit, "Update Checkout", class: 'btn btn-primary' %>
-    <%= link_to 'Back', checkouts_path, class: 'btn btn-secondary' %>
-  </div>
+  <%= f.button :submit, "Update Checkout", class: 'btn btn-primary' %>
 <% end %>
+
+<%= link_to "Back to Checkouts", checkouts_path, class: 'btn btn-secondary' %>

@@ -1,31 +1,32 @@
 class LibraryUsersController < ApplicationController
-  before_action :set_library_user, only: [:edit, :update, :destroy]
   before_action :set_library, except: [:create]
+  before_action :set_library_user, only: [:edit, :update, :destroy]
   before_action :authorize_library_user, only: [:edit, :update, :destroy]
 
   def index
-    @library_users = current_library.library_users.all
-    # authorize @library_users
+    authorize @library, :show?
+    @library_users = @library.library_users.includes(:user)
   end
 
   def new
-    @library_user = LibraryUser.new(library: @library)
+    @library_user = @library.library_users.new
     authorize @library_user
   end
 
   def create
-    @library_user = LibraryUser.new
-    authorize @library_user
     @library = Library.find_by(unique_id: params[:unique_id])
     if @library
-      @library_user.library = @library
-      @library_user.user = current_user
-      @library_user.save
-      redirect_to library_path(@library)
-    else
-      redirect_to root_path, notice: "No library found with this ID"
-    end
+      @library_user = @library.library_users.new(user: current_user)
+      authorize @library_user
 
+      if @library_user.save
+        redirect_to library_path(@library), notice: "Successfully joined the library."
+      else
+        redirect_to root_path, alert: "Failed to join the library."
+      end
+    else
+      redirect_to root_path, alert: "No library found with the provided unique ID."
+    end
   end
 
   def edit
@@ -33,22 +34,21 @@ class LibraryUsersController < ApplicationController
 
   def update
     if @library_user.update(library_user_params)
-      redirect_to library_library_users_path(@library), notice: 'User updated successfully.'
+      redirect_to library_library_users_path(@library), notice: "Library user updated successfully."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
   def destroy
     @library_user.destroy
-    redirect_to library_library_users_path(@library), notice: 'User removed successfully from library.'
+    redirect_to library_library_users_path(@library), notice: "User removed successfully from the library."
   end
 
   private
 
   def set_library
-    current_library = current_user.library_id
-    # @library = Library.find(params[:library_id])
+    @library = Library.find(params[:library_id])
   end
 
   def set_library_user

@@ -1,25 +1,37 @@
-<h1>Library Users</h1>
+<h1>Library Users for <%= @library.name %></h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Admin</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @library_users.each do |library_user| %>
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+
+<% if @library_users.any? %>
+  <table class="table table-bordered">
+    <thead>
       <tr>
-        <td><%= library_user.user.email %></td>
-        <td><%= library_user.is_admin? ? "Yes" : "No" %></td>
-        <td>
-          <%= link_to 'Edit', edit_library_library_user_path(@library, library_user), class: "btn btn-primary" %>
-          <%= link_to 'Remove', library_library_user_path(@library, library_user), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %>
-        </td>
+        <th>User Email</th>
+        <th>Role</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @library_users.each do |library_user| %>
+        <tr>
+          <td><%= library_user.user.email %></td>
+          <td><%= library_user.is_admin? ? "Admin" : "Member" %></td>
+          <td>
+            <% if policy(library_user).destroy? %>
+              <%= link_to 'Remove User', library_user_path(library_user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No users found in this library.</p>
+<% end %>
 
-<%= link_to 'Add User', new_library_library_user_path(@library), class: "btn btn-success" %>
+<%= link_to "Back to Library", library_path(@library), class: 'btn btn-secondary' %>

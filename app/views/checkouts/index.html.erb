@@ -1,44 +1,45 @@
-<h1>Book Checkouts History</h1>
-<h5>Past Book Checkout Records</h5>
-<%= link_to "Create New Checkout", new_checkout_path, class: "btn btn-success" %>
+<h1>Your Checkouts</h1>
+
+<% if flash[:notice] %>
+  <p class="alert alert-success"><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:alert] %>
+  <p class="alert alert-danger"><%= flash[:alert] %></p>
+<% end %>
+
 <% if @checkouts.any? %>
-  <table>
+  <table class="table table-bordered">
     <thead>
       <tr>
-        <th style="padding: 20px;">User</th>
-        <th style="padding: 20px;">Book Title</th>
-        <th style="padding: 20px;">Library</th>
-        <th style="padding: 20px;">Start Date</th>
-        <th style="padding: 20px;">Due Date</th>
-        <th style="padding: 20px;">Status</th>
-        <th style="padding: 20px;">Quantity</th>
-        <th style="padding: 20px;">Actions</th>
+        <th>Book</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>Due Date</th>
+        <th>Return Date</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @checkouts.each do |checkout| %>
         <tr>
-          <td style="padding: 20px;"><%= checkout.user.email %></td>
-          <td style="padding: 20px;"><%= checkout.book.title %></td>
-          <td style="padding: 20px;"><%= checkout.library.name %></td>
-          <td style="padding: 20px;"><%= checkout.start_date %></td>
-          <td style="padding: 20px;"><%= checkout.due_date %></td>
-          <td style="padding: 20px;"><%= checkout.status.humanize %></td>
-          <td style="padding: 20px;"><%= checkout.book.quantity %></td>
+          <td><%= checkout.book.title %></td>
+          <td><%= checkout.status.humanize %></td>
+          <td><%= checkout.start_date.strftime('%Y-%m-%d') if checkout.start_date %></td>
+          <td><%= checkout.due_date.strftime('%Y-%m-%d') if checkout.due_date %></td>
+          <td><%= checkout.return_date.strftime('%Y-%m-%d') if checkout.return_date %></td>
           <td>
-            <% if checkout.status == "not_yet_returned" %>
-              <%= button_to "Return", return_checkout_path(checkout),
-                          method: :patch,
-                          class: "btn btn-success" %>
-          <td><%= link_to "Edit", edit_checkout_path(checkout), class: "btn btn-primary" %></td>
+            <% if checkout.approved? && !checkout.returned? %>
+              <%= link_to 'Return Book', return_checkout_path(checkout), method: :patch, class: 'btn btn-warning btn-sm', data: { confirm: 'Are you sure?' } %>
+            <% else %>
+              <p>No actions available</p>
             <% end %>
-
           </td>
         </tr>
       <% end %>
-      </td>
     </tbody>
   </table>
 <% else %>
-  <p>No checkouts found.</p>
+  <p>You have no checkouts yet. Reserve books to start borrowing!</p>
 <% end %>
+
+<%= link_to "Back to Dashboard", root_path, class: 'btn btn-secondary' %>

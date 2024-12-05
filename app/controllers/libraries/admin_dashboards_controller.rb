@@ -1,32 +1,22 @@
 class Libraries::AdminDashboardsController < ApplicationController
   before_action :set_library
-  
   layout "dashboard"
 
-  # Displays the admin dashboard for a specific library.
-  # - Authorizes the `admin_dashboard?` policy to ensure the user is an admin of the library.
-  # - Loads all books associated with the library.
-  # - Loads all users who are members of the library.
-  # - Loads all notifications for the library, ordered by the most recent first.
-  # - Loads all pending reservations (checkouts) for the library, including associated books and users.
   def show
     authorize @library, :admin_dashboard?
-    
+
     @books = @library.books
     @users = @library.users
-    @pending_checkouts = @library.checkouts.where(status: 'pending').includes(:book, :user)
-
+    @pending_checkouts = @library.checkouts.pending.includes(:book, :user)
+    @notification = Notification.new # Initialize the notification object here
   end
 
   def approve_reservation
     @checkout = @library.checkouts.pending.find(params[:checkout_id])
-    authorize @checkout
+    authorize @checkout, :approve_reservation?
 
-    if @checkout.update(status: :approved, approved_at: Time.current)
+    if @checkout.update(status: :approved)
       @checkout.book.decrement!(:quantity)
-      if @checkout.book.quantity.zero?
-        @checkout.book.update!(availability: false, status: 'not_available')
-      end
       flash[:notice] = "Reservation approved successfully."
     else
       flash[:alert] = "Could not approve the reservation."
@@ -37,7 +27,7 @@ class Libraries::AdminDashboardsController < ApplicationController
 
   def deny_reservation
     @checkout = @library.checkouts.pending.find(params[:checkout_id])
-    authorize @checkout
+    authorize @checkout, :deny_reservation?
 
     if @checkout.update(status: :denied)
       flash[:notice] = "Reservation denied successfully."
