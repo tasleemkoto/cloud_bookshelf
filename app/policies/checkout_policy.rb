@@ -25,6 +25,15 @@ class CheckoutPolicy < ApplicationPolicy
     library_admin? || record.user == user
   end
 
+  def approve_reservation?
+    library_admin?
+  end
+
+  def deny_reservation?
+    library_admin?
+  end
+
+
   private
 
   def library_admin?
