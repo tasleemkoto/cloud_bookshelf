@@ -61,7 +61,7 @@ class Libraries::BooksController < ApplicationController
   private
 
   def set_library
-    @library = Library.find(params[:library_id])
+    @library = Library.find(params[:id])
   end
 
   def set_book
