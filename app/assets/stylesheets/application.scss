@@ -14,6 +14,11 @@
 @import "components/registration_signin_out";
 @import "pages/form_acess";
 
+//bootstrap_variables
+@import "config/_bootstrap_variables";
+
+@import "components/tables";
+
 html, body {
   height: 100%;
   margin: 0;

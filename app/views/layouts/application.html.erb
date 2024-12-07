@@ -14,7 +14,19 @@
   <%= render "shared/navbar" unless action_name == "home" %>
 
 <%= render "shared/flashes" %>
+<div class="dashboard-layout">
+      <div class="sidebar-layout">
+        <%= render 'shared/sidebar' %>
+      </div>
+      <div class="content-area-layout">
+        <%= render 'shared/flashes' %>
+        <div class="container_dashboard ">
+          <%= yield %>
+        </div>
+      </div>
 
-    <%= yield %>
+    </div>
+
+    
   </body>
 </html>
