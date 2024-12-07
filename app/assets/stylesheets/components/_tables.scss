@@ -1,0 +1,81 @@
+// Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$background-color: #f8f9fa;
+$table-header-color: #343a40;
+$text-color: #212529;
+
+
+// Libraries Table
+.table {
+  width: 50%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  thead {
+    background-color: $table-header-color;
+    color: #fff;
+
+    th {
+      text-align: left;
+      padding: 1rem;
+    }
+  }
+
+  tbody {
+    tr {
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #ddd;
+
+        &:last-child {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+
+// Libraries Table
+.table {
+  width: 50%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  thead {
+    background-color: $table-header-color;
+    color: #fff;
+
+    th {
+      text-align: left;
+      padding: 1rem;
+    }
+  }
+
+  tbody {
+    tr {
+      &:hover {
+        background-color: rgba($primary-color, 0.1);
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #ddd;
+
+        &:last-child {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
