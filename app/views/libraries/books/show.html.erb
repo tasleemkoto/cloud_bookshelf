@@ -1,68 +1,82 @@
-<h1>Book Details: <%= @book.title %></h1>
-<p><strong>Author:</strong> <%= @book.author %></p>
-<p><strong>Genre:</strong> <%= @book.genre %></p>
-<p><strong>Year:</strong> <%= @book.year %></p>
-<p><strong>Format:</strong> <%= @book.format.capitalize %></p>
-<p><strong>Status:</strong> <%= @book.status.humanize %></p>
-<p><strong>Summary:</strong> <%= @book.summary %></p>
+<div class="container book-details">
+  <!-- Book Title and Basic Information -->
+  <h1 class="display-4 text-center mb-4">Book Name: <span class="text-primary"><%= @book.title %></span></h1>
+  <p><strong> by:</strong> <%= @book.author %></p>
+  <!-- Book Information Section -->
+  <div class="book-info mb-4">
+  <!-- Book Image -->
+  <div class="book-image">
+    <img src="https://plus.unsplash.com/premium_photo-1669652639337-c513cc42ead6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Ym9va3N8ZW58MHx8MHx8fDA%3D" alt="Book Cover" class="book-cover">
+  </div>
+  <!-- Book Title -->
 
-<% if @book.format == "ebook" %>
-  <%= link_to "Read Book", read_library_book_path(@library, @book), class: 'btn btn-primary' %>
-<% end %>
+    <p><strong>🎭 Genre:</strong> <%= @book.genre %></p>
+    <p><strong>📅 Year:</strong> <%= @book.year %></p>
+    <p><strong>📂 Format:</strong> <%= @book.format.capitalize %></p>
+    <p><strong>📘 Status:</strong> <%= @book.status.humanize %></p>
+    <p><strong>📝 Summary:</strong> <%= @book.summary %></p>
+  </div>
 
-<% if policy(@book).reserve? %>
-  <%= link_to "Reserve", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success' %>
-<% end %>
-
-<h2>Reviews</h2>
-<% if @reviews.any? %>
-  <ul>
-  <% @reviews.each do |review| %>
-    <li id="<%= dom_id(review) %>">
-      <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
-      <p><strong>Comment:</strong> <%= review.comment %></p>
-      <p><strong>By:</strong> <%= review.user.email %></p>
-      <% if policy(review).destroy? %>
-        <%= button_to 'Delete Review', library_book_review_path(@library, @book, review),
-                      method: :delete,
-                      form: { data: { turbo_confirm: 'Are you sure?' } },
-                      class: 'btn btn-danger btn-sm' %>
-      <% end %>
-    </li>
+  <!-- Conditional Read or Reserve Button -->
+  <% if @book.format == "ebook" %>
+    <%= link_to "📖 Read This Book", read_library_book_path(@library, @book), class: 'btn btn-primary mb-3' %>
   <% end %>
-</ul>
 
+  <% if policy(@book).reserve? %>
+    <%= link_to "Reserve Now", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success mb-3' %>
+  <% end %>
 
-<% else %>
-  <p>No reviews for this book yet.</p>
-<% end %>
+  <%# Wishlist Button (if signed in and allowed) %>
+  <% if user_signed_in? && policy(@library).create? %>
+    <%= button_to '❤️ Add to Wishlist', library_wishlists_path(@library, book_id: @book.id), method: :post, class: 'btn btn-outline-primary mb-3', data: { turbo: 'false' } %>
+  <% end %>
 
-<h3>Add a Review</h3>
-<% if user_signed_in? %>
-  <%= form_with model: [@library, @book, @book.reviews.new], local: true do |f| %>
-  <div class="form-group">
-    <%= f.label :rating, "Rating (1-5)" %>
-    <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :comment, "Comment" %>
-    <%= f.text_area :comment, rows: 4, class: "form-control" %>
-  </div>
-  <%= f.submit "Submit Review", class: "btn btn-success" %>
-<% end %>
+  <!-- Reviews Section -->
+  <h2 class="text-center my-4">⭐ Reader Reviews</h2>
 
-<% else %>
-  <p>You need to <%= link_to "sign in", new_user_session_path %> to leave a review.</p>
-<% end %>
-<% if flash[:notice] %>
-  <p class="alert alert-success"><%= flash[:notice] %></p>
-<% end %>
-<% if flash[:alert] %>
-  <p class="alert alert-danger"><%= flash[:alert] %></p>
-<% end %>
+  <% if @reviews.any? %>
+    <ul class="reviews-list">
+      <% @reviews.each do |review| %>
+        <li id="<%= dom_id(review) %>" class="review-item">
+          <p><strong>Rating:</strong> 🌟 <%= review.rating %> / 5</p>
+          <p><strong>Comment:</strong> "<%= review.comment %>"</p>
+          <p><strong>By:</strong> <%= review.user.email %></p>
+          <% if policy(review).destroy? %>
+            <%= button_to '🗑️ Delete Review', library_book_review_path(@library, @book, review),
+                          method: :delete,
+                          form: { data: { turbo_confirm: 'Are you sure?' } },
+                          class: 'btn btn-danger btn-sm' %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-muted text-center">No reviews for this book yet. Be the first to share your thoughts!</p>
+  <% end %>
 
-<%# wishlist %>
-<% if user_signed_in? && policy(@library).create? %>
-  <%= button_to 'Add to Wishlist', library_wishlists_path(@library, book_id: @book.id), method: :post, class: 'btn btn-primary', data: { turbo: 'false' } %>
+  <!-- Add a Review Form -->
+  <h3 class="my-4">Write Your Review</h3>
+  <% if user_signed_in? %>
+    <%= form_with model: [@library, @book, @book.reviews.new], local: true do |f| %>
+      <div class="form-group">
+        <%= f.label :rating, "Rating (1-5)", class: "form-label" %>
+        <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :comment, "Your Comment", class: "form-label" %>
+        <%= f.text_area :comment, rows: 4, class: "form-control" %>
+      </div>
+      <%= f.submit "Submit Review", class: "btn btn-success mt-3" %>
+    <% end %>
+  <% else %>
+    <p class="text-center">Please <%= link_to "sign in", new_user_session_path %> to leave a review.</p>
+  <% end %>
 
-<% end %>
+  <!-- Flash Messages -->
+  <% if flash[:notice] %>
+    <p class="alert alert-success"><%= flash[:notice] %></p>
+  <% end %>
+  <% if flash[:alert] %>
+    <p class="alert alert-danger"><%= flash[:alert] %></p>
+  <% end %>
+</div>
