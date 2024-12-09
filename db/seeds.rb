@@ -32,7 +32,7 @@ puts "Library users assigned: #{LibraryUser.count}"
 
 # Add books to libraries
 puts "Adding books to libraries..."
-5.times do
+20.times do
   format = %w[ebook hardcover researchpaper].sample
   quantity = format == 'hardcover' ? rand(2..5) : 1  # eBooks/researchpapers have no physical quantity
 
