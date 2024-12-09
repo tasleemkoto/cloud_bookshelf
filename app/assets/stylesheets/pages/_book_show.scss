@@ -1,0 +1,111 @@
+.container.book-details {
+  padding: 20px;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+
+    .text-primary {
+      color: #007bff;
+    }
+  }
+
+  .book-info {
+    margin-bottom: 30px;
+  }
+
+  /* Book Image */
+  .book-image {
+    width: 100%;
+    height: 250px; /* Adjust as needed */
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .book-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  /* Book Details Section */
+  .book-title {
+    p {
+      font-size: 1rem;
+      margin: 8px 0;
+      strong {
+        color: #333;
+      }
+    }
+  }
+
+  /* Flexbox Layout for Reserve Button */
+  .d-flex {
+    justify-content: center;
+    align-items: center;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  /* Reviews Section */
+  .reviews-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+
+    .review-item {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%; /* Adjust this line */
+      max-width: 500px; /* Optionally set a max-width */
+      margin-left: auto; /* Center the review item */
+      margin-right: auto;
+
+      p {
+        margin: 5px 0;
+        strong {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  /* Rating and Form */
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .form-control {
+      width: 100%;/* Dropdown fills the form width */
+      padding: -20px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      max-width: 450px; /* Restricts the maximum width */
+      margin: 0 auto;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+    }
+  }
+
+
+}
