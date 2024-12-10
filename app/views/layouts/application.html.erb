@@ -11,22 +11,14 @@
   </head>
 
   <body>
-  <%= render "shared/navbar" unless action_name == "home" %>
-
-<%= render "shared/flashes" %>
-<div class="dashboard-layout">
+    <%= render "shared/flashes" %>
+    <div class="wrapper">
       <div class="sidebar-layout">
-        <%= render 'shared/sidebar' %>
+        <%= render 'shared/sidebar' unless action_name == "home" %>
       </div>
-      <div class="content-area-layout">
-        <%= render 'shared/flashes' %>
-        <div class="container_dashboard ">
-          <%= yield %>
-        </div>
+      <div class="content">
+        <%= yield %>
       </div>
-
-    </div>
-
-    
+    </div>     
   </body>
 </html>

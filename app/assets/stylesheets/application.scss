@@ -13,6 +13,9 @@
 @import "pages/home";
 @import "components/registration_signin_out";
 @import "pages/form_acess";
+@import "components/header";
+@import "components/sidebar";
+@import 'components/breakpoints';
 
 //bootstrap_variables
 @import "config/_bootstrap_variables";
@@ -38,27 +41,23 @@ html, body {
 }
 
 .dashboard-layout {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(14, 1fr); /* Assuming a 12-column grid, adjust as needed */
     height: 100%;
-    background-color: $blue;
+    flex: 1;
+    background-color: $white;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
 
-.container_dashboard {
-    margin: var(--header-height) 0 0 0;
-  }
+
 
 .content-area-layout {
-    grid-column: span 12;
-    background-color: white;
+    background-color: blue;
     border-radius: 5px;
     margin: 0;
   }
 
 
 .sidebar-layout {
-    grid-column: span 2;
-    background-color: $blue;
+    flex: 1;
+    background-color: $white;
   }
+
