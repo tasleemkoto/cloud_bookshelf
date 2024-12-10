@@ -5,9 +5,11 @@ class Libraries::BooksController < ApplicationController
   def index
     authorize @library, :show?
     @books = policy_scope(@library.books)
+    @image_urls = fetch_cloudinary_images('Bookshelf')
   end
 
   def show
+    set_library
     authorize @book
     @reviews = @book.reviews
   end
@@ -69,5 +71,17 @@ class Libraries::BooksController < ApplicationController
 
   def book_params
     params.require(:book).permit(:title, :summary, :author, :genre, :year, :format, :quantity, :qr_code, :status)
+  end
+
+  def fetch_cloudinary_images(folder)
+    resources = Cloudinary::Api.resources(
+      type: :upload,
+      prefix: folder,
+      max_results: 100 # Fetch up to 100 images from the folder
+    )
+    resources['resources'].map { |resource| resource['secure_url'] }
+  rescue Cloudinary::Api::Error => e
+    Rails.logger.error "Cloudinary API Error: #{e.message}"
+    []
   end
 end
