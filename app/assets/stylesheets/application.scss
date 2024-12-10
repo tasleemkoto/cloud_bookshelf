@@ -16,6 +16,10 @@
 @import "components/header";
 @import "components/sidebar";
 @import 'components/breakpoints';
+@import "pages/book_index";
+@import "pages/book_show";
+@import "pages/add-book-form";
+
 
 //bootstrap_variables
 @import "config/_bootstrap_variables";
