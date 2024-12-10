@@ -11,14 +11,18 @@
   </head>
 
   <body>
-    <%= render "shared/flashes" %>
-    <div class="layout">
-      <aside class="sidebar-layout">
-        <%= render 'shared/sidebar' unless action_name == "home" %>
-      </aside>
-    <main class="content-layout">
-      <%= yield %>
-    </main>
-</div>  
+    <div class="container">
+      <%= render "shared/flashes" %>
+      <%= render "shared/header"%>
+      <div class="layout">
+        <aside class="sidebar-layout">
+          <%= render 'shared/sidebar' unless action_name == "home" %>
+        </aside>
+      <main class="content-layout">
+        <%= yield %>
+      </main>
+    </div>  
+
+    </div>
   </body>
 </html>
