@@ -1,18 +1,43 @@
-<h1>Edit Book: <%= @book.title %></h1>
+<h2 class="display-6 text-center mb-4">Edit Book: <span class="text-primary"> <%= @book.title %></span></h2>
 
-<%= simple_form_for [@library, @book] do |f| %>
-  <div class="form-group">
-    <%= f.input :title, label: "Book Title" %>
-    <%= f.input :author, label: "Author" %>
-    <%= f.input :genre, label: "Genre" %>
-    <%= f.input :year, label: "Year of Publication" %>
-    <%= f.input :format, collection: [["eBook", "ebook"], ["Hardcover", "hardcover"], ["Research Paper", "researchpaper"]], label: "Format" %>
-    <%= f.input :summary, label: "Summary" %>
-    <% if @book.format == "hardcover" %>
-      <%= f.input :quantity, label: "Quantity" %>
-    <% end %>
-  </div>
-  <%= f.button :submit, "Update Book", class: 'btn btn-success' %>
-<% end %>
+<div class="add-book-form">
+  <%= simple_form_for [@library, @book] do |f| %>
+    <div class="form-samerow">
+      <div class="form-field">
+        <%= f.input :title, label: "Book Title" %>
+      </div>
+      <div class="form-field">
+        <%= f.input :author, label: "Author" %>
+      </div>
+    </div>
 
-<%= link_to "Back to Books", library_books_path(@library), class: 'btn btn-secondary' %>
+    <div class="form-samerow">
+      <div class="form-field">
+        <%= f.input :genre, label: "Genre" %>
+      </div>
+      <div class="form-field">
+        <%= f.input :year, label: "Year of Publication" %>
+      </div>
+      <div class="form-field">
+        <%= f.input :format, collection: [["eBook", "ebook"], ["Hardcover", "hardcover"], ["Research Paper", "researchpaper"]], label: "Format" %>
+      </div>
+    </div>
+
+    <div class="form-samerow">
+      <div class="form-field">
+        <%= f.input :summary, label: "Summary" %>
+      <div>
+      <div class="form-field">
+        <% if @book.format == "hardcover" %>
+        <%= f.input :quantity, label: "Quantity" %>
+      </div>
+       <% end %>
+    </div>
+
+   <div class="button-row">
+    <%= f.button :submit, "Update Book", class: 'btn btn-success' %>
+      <%= link_to "Back to Books", library_books_path(@library), class: 'btn btn-secondary' %>
+    </div>
+
+  <% end %>
+</div>

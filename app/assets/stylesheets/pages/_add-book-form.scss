@@ -1,0 +1,96 @@
+
+.add-book-form {
+  max-width: 900px; /* Limits the form's width for better readability */
+  margin: 0 auto; /* Centers the form on the page */
+  padding: 20px; /* Adds spacing inside the form */
+  background-color: #f9f9f9; /* Light background for the form */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+
+  h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+
+    .text-primary {
+      color: #007bff; /* Primary blue for emphasis */
+    }
+  }
+
+    .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%; /* Ensures inputs stretch across the form */
+      //max-width: 1200px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+    }
+
+    textarea {
+      resize: none; /* Disables manual resizing for consistency */
+    }
+  }
+
+  .form-samerow {
+    display: flex; /* Aligns child fields horizontally */
+    gap: 20px; /* Adds spacing between fields */
+
+    .form-field {
+      flex: 1; /* Makes fields take equal width */
+      min-width: 0; /* Prevents fields from shrinking too much */
+    }
+  }
+
+  .button-row {
+    display: flex; /* Aligns buttons horizontally */
+    justify-content: space-between; /* Adds space between buttons */
+    gap: 20px; /* Adds spacing between buttons */
+  }
+
+  .btn {
+    display: inline-block;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+
+    &.btn-success {
+      background-color: #28a745;
+      color: #fff;
+
+      &:hover {
+        background-color: #218838;
+      }
+    }
+
+    &.btn-secondary {
+      background-color: #6c757d;
+      color: #fff;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: #5a6268;
+      }
+    }
+  }
+}

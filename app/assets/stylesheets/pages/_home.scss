@@ -6,12 +6,13 @@
   height: 100vh; /* Full height */
   //background-color: #f9f9f9; /* Light background for the page */
   padding: 4rem;
+  color: white;
 
   background-image: image-url('cloud.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: brightness(1);
+  //filter: brightness(1);
 }
 
 
@@ -20,4 +21,5 @@
 }
 hme1 {
   font-size: smaller;
+
  }
