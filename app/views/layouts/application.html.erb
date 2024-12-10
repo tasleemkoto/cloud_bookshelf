@@ -12,13 +12,13 @@
 
   <body>
     <%= render "shared/flashes" %>
-    <div class="wrapper">
-      <div class="sidebar-layout">
+    <div class="layout">
+      <aside class="sidebar-layout">
         <%= render 'shared/sidebar' unless action_name == "home" %>
-      </div>
-      <div class="content">
-        <%= yield %>
-      </div>
-    </div>     
+      </aside>
+    <main class="content-layout">
+      <%= yield %>
+    </main>
+</div>  
   </body>
 </html>

@@ -32,36 +32,25 @@ html, body {
 
 }
 
-.wrapper {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+.layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent scrolling if not needed */
 }
 
-.content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboard-layout {
-    height: 100%;
-    flex: 1;
-    background-color: $white;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  }
-
-
-
-.content-area-layout {
-    background-color: blue;
-    border-radius: 5px;
-    margin: 0;
-  }
-
-
+/* Sidebar styling */
 .sidebar-layout {
-    flex: 1;
-    background-color: $white;
-  }
+  flex: 0 0 250px; /* Fixed width for the sidebar */
+  background-color: #f4f4f4; /* Example background */
+  border-right: 1px solid #ddd; /* Optional border for separation */
+  height: 100%;
+  overflow-y: auto; /* Scrollable sidebar if content overflows */
+}
 
+/* Content area styling */
+.content-layout {
+  flex: 1; /* Takes the remaining space */
+  padding: 20px; /* Add some padding for better readability */
+  overflow-y: auto; /* Scrollable content if needed */
+}
