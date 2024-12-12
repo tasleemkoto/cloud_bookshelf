@@ -14,7 +14,7 @@
 
             <div class="book-image">
             <% if book.photo.attached? %>
-              <%= image_tag book.photo, alt: "Book Cover", class: "book-cover" %>
+              <%= cl_image_tag book.photo.key, alt: "Book Cover", class: "book-cover" %>
             <% else %>
               <%= image_tag @image_urls.sample, alt: "Random Book Cover", class: "book-cover" %>
             <% end %>

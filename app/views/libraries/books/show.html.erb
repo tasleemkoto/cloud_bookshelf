@@ -10,7 +10,7 @@
         <div class="book-image">
           <div class="book-cover">
             <% if @book.photo.attached? %>
-              <%= image_tag @book.photo, alt: @book.title, class: "cover-image" %>
+              <%= cl_image_tag @book.photo.key, alt: @book.title, class: "cover-image" %>
             <% elsif @random_image %>
               <%= image_tag @random_image, alt: "Random Book Cover", class: "cover-image" %>
             <% else %>
@@ -25,6 +25,7 @@
       <!-- Book Details Section -->
       <div class="col-md-4">
         <div class="book-title">
+          <p><%= @book.photo.key %></p>
           <p><strong>📖 Author:</strong> <%= @book.author %></p>
           <p><strong>🎭 Genre:</strong> <%= @book.genre %></p>
           <p><strong>📅 Year:</strong> <%= @book.year %></p>
