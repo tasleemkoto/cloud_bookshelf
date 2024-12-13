@@ -10,19 +10,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <div class="container">
-      <%= render "shared/flashes" %>
-      <%= render "shared/header"%>
-      <div class="layout">
-        <aside class="sidebar-layout">
-          <%= render 'shared/sidebar' unless action_name == "home" %>
-        </aside>
-      <main class="content-layout">
-        <%= yield %>
-      </main>
-    </div>  
+<body>
+    <div class="d-flex" id="wrapper">
+      <!-- Sidebar -->
+      <%= render 'shared/header' unless current_page?(root_path) %>
 
+      <!-- Page Content -->
+      <div id="page-content-wrapper" class="w-100">
+        <%= render 'shared/sidebar' unless current_page?(root_path)%>
+        <main class="main container" id="main">
+         <%= yield %>
+        </main>
+        </div>
+      </div>
     </div>
   </body>
 </html>

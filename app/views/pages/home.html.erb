@@ -24,7 +24,6 @@
           <td><%= library.name %></td>
           <td>
             <%= link_to 'View Library', library_path(library), class: 'btn btn-primary btn-sm' %>
-            <%= link_to 'Admin Dashboard', admin_dashboard_library_path(library), class: 'btn btn-warning btn-sm' if current_user.library_admin?(library) %>
           </td>
         </tr>
       <% end %>
