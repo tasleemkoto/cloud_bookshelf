@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CloudBookshelf</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Cloud Bookshelf</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application'%>
   </head>
-
-<body>
+  <body>
     <div class="d-flex" id="wrapper">
       <!-- Sidebar -->
-      <%= render 'shared/header' unless current_page?(root_path) %>
+      <%= render 'shared/sidebar' unless current_page?(root_path) %>
 
       <!-- Page Content -->
       <div id="page-content-wrapper" class="w-100">
-        <%= render 'shared/sidebar' unless current_page?(root_path)%>
-        <main class="main container" id="main">
-         <%= yield %>
-        </main>
+        <!-- <%= render 'shared/navbar' unless current_page?(root_path) %>-->
+        <div class="container-fluid py-4">
+          <%= yield %>
         </div>
       </div>
     </div>
