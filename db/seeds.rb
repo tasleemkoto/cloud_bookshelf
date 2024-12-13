@@ -138,5 +138,10 @@ Notification.create!(user: student_1, library: library_1, content: 'New books ar
 Notification.create!(user: librarian, library: library_1, content: 'Please review the latest reservations.')
 
 puts "Notifications created: #{Notification.count}"
-
 puts "Seed data loaded successfully!"
+
+
+
+
+
+

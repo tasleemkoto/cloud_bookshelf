@@ -41,7 +41,7 @@ class Book < ApplicationRecord
     self.qr_code = Rails.application.routes.url_helpers.library_book_url(
       library_id: library.id,
       id: id,
-      host: 'cloudbookshelf-749044d31b43.herokuapp.com'
+      host: 'www.cloudbookshelf.me'
     )
   end
 
