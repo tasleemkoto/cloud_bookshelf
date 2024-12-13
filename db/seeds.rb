@@ -1,4 +1,6 @@
 require 'faker'
+require 'cloudinary'
+require 'open-uri'
 
 # Clear old data
 puts "Clearing old data..."
@@ -32,10 +34,36 @@ puts "Library users assigned: #{LibraryUser.count}"
 
 # Add books to libraries
 puts "Adding books to libraries..."
-20.times do
-  format = %w[ebook hardcover researchpaper].sample
-  quantity = format == 'hardcover' ? rand(2..5) : 1  # eBooks/researchpapers have no physical quantity
 
+# Fetch images from a Cloudinary folder
+def fetch_cloudinary_images(folder)
+  resources = Cloudinary::Api.resources(
+    type: :upload,
+    prefix: folder,
+    max_results: 100 # Adjust the max number as needed
+  )
+  resources['resources'].map { |resource| resource['secure_url'] }
+rescue Cloudinary::Api::Error => e
+  Rails.logger.error "Cloudinary API Error: #{e.message}"
+  []
+end
+
+# Example: Fetch images from a specific folder in Cloudinary
+cloudinary_images = fetch_cloudinary_images('books')
+
+# Ensure there are enough images for the books
+if cloudinary_images.size < 16
+  raise "Not enough images in Cloudinary folder! Found #{cloudinary_images.size}, need at least 20."
+end
+
+# Create books with Cloudinary images
+cloudinary_images.shuffle! # Shuffle to assign randomly
+
+16.times do
+  format = %w[ebook hardcover researchpaper].sample
+  quantity = format == 'hardcover' ? rand(2..5) : 1
+
+  # Create a book
   book = Book.create!(
     title: Faker::Book.title,
     summary: Faker::Lorem.paragraph,
@@ -45,9 +73,19 @@ puts "Adding books to libraries..."
     format: format,
     library: library_1,
     user: librarian,
-    quantity:  # Assign only for hardcopies
+    quantity: quantity
   )
-  puts "Book created: #{book.title} (ID: #{book.id}, Quantity: #{book.quantity}, Format: #{book.format})"
+
+  # Attach a unique Cloudinary photo
+  photo_url = cloudinary_images.pop # Get and remove the last image from the array
+  downloaded_photo = URI.open(photo_url)
+  book.photo.attach(
+    io: downloaded_photo,
+    filename: File.basename(photo_url),
+    content_type: 'image/jpeg' # Adjust content type based on the file
+  )
+
+  puts "Book created: #{book.title} (ID: #{book.id}, Quantity: #{book.quantity}, Format: #{book.format}, Photo: #{photo_url})"
 
   # Add reviews
   [student_1, student_2].each do |student|

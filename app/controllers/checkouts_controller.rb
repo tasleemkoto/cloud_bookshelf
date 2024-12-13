@@ -32,7 +32,6 @@ class CheckoutsController < ApplicationController
       @checkout.book.decrement!(:quantity)
       flash[:notice] = "Reservation approved successfully."
     else
-      raise
       flash[:alert] = "Could not approve the reservation."
     end
     @library = @checkout.book.library
