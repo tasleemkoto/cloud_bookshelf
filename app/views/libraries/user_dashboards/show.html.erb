@@ -28,7 +28,11 @@
           <td><%= book.status.humanize %></td>
           <td>
             <%= link_to 'View Details', library_book_path(@library, book), class: 'btn btn-info btn-sm' %>
-           
+            <%# <%= link_to library_book_path(@library, book) do %>
+              <%# <span class="material-symbols-outlined" style="color: #1a3d6d">
+                multimodal_hand_eye
+              </span> %>
+            <%# <% end %>
           </td>
         </tr>
       <% end %>

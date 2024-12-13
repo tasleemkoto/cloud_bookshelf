@@ -31,6 +31,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: helvetica;
 }
 
 .layout {
@@ -77,4 +78,12 @@ html, body {
   .table {
     font-size: 1.1rem; /* Slightly increase font size */
   }
+}
+
+.container-fluid.py-4 .container.my-5 {
+  background-color: #F0F7FF;
+}
+
+.container.my-5 {
+  background-color: #F0F7FF;
 }
