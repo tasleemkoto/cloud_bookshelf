@@ -89,3 +89,7 @@ gem 'faker'
 
 gem 'cocoon'
 
+gem 'rqrcode'
+gem 'rqrcode_png'
+gem 'kaminari'
+gem 'active_storage_validations'

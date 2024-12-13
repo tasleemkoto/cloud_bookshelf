@@ -1,6 +1,7 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_admin
+  skip_after_action :verify_authorized, only: [:create] # Skip Pundit's authorization check for `create`
 
   def create
     @notification = Notification.new(notification_params.merge(user: current_user))

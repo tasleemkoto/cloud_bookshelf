@@ -25,13 +25,15 @@
             </div>
           </div>
 
-          <!-- Back Side -->
+            <!-- Book Details -->
           <div class="card-side card-back">
             <div class="book-details">
               <p><strong>Author:</strong> <%= book.author %></p>
               <p><strong>Genre:</strong> <%= book.genre %></p>
               <p><strong>Format:</strong> <%= book.format.capitalize %></p>
             </div>
+
+            <!-- Book Actions -->
             <div class="book-actions">
               <%= link_to 'View', library_book_path(@library, book), class: 'btn btn-primary btn-sm' %>
               <% if policy(book).update? %>

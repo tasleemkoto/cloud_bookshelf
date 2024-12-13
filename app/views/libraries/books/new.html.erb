@@ -27,10 +27,21 @@
       <div class="form-field">
         <%= f.input :summary, label: "Summary" %>
       </div>
+
+       <!-- Hardcover-Specific Fields -->
+      <div class="form-field" id="hardcover-fields" style="display: <%= @book.format == 'hardcover' ? 'block' : 'none' %>;">
+        <%= f.input :quantity, label: "Quantity", input_html: { value: 1 } %>
+        <%= f.input :qr_code, label: "QR Code (auto-generated if blank)", input_html: { placeholder: "Optional" } %>
+      </div>
+
+      <!-- eBook-Specific Fields -->
+      <div class="form-field" id="ebook-fields" style="display: <%= @book.format == 'ebook' ? 'block' : 'none' %>;">
+        <%= f.input :pdf, label: "Upload eBook PDF", as: :file %>
+      </div>
+
+      <!-- Photo for All Books -->
       <div class="form-field">
-        <% if @book.format == "hardcover" %>
-          <%= f.input :quantity, label: "Quantity", input_html: { value: 1 } %>
-        <% end %>
+        <%= f.input :photo, label: "Upload Book Cover Photo", as: :file %>
       </div>
 
       <div class="button-row">
