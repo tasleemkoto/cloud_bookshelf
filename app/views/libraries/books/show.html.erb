@@ -17,8 +17,6 @@
               <p>No cover available</p>
             <% end %>
           </div>
-
-          <!--<img src="https://plus.unsplash.com/premium_photo-1669652639337-c513cc42ead6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Ym9va3N8ZW58MHx8MHx8fDA%3D" alt="Book Cover" class="book-cover"> -->
         </div>
       </div>
 
@@ -78,24 +76,26 @@
       <% end %>
     </div>
 
-    <!-- Write Review Section -->
-    <div class="col-md-6">
-      <h4>Add Your Review</h4>
-      <% if user_signed_in? %>
-        <%= form_with model: [@library, @book, @book.reviews.new], local: true do |f| %>
-          <div class="form-group">
-            <%= f.label :rating, "Rating (1-5)", class: "form-label" %>
-            <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
-          </div>
-          <div class="form-group">
-            <%= f.label :comment, "Your Comment", class: "form-label" %>
-            <%= f.text_area :comment, rows: 4, class: "form-control" %>
-          </div>
-          <%= f.submit "Submit Review", class: "btn btn-success mt-3" %>
+    <!-- Write a Review -->
+    <h4 class="text-center mt-4">Add Your Review</h4>
+    <div class="d-flex justify-content-center">
+      <div class="col-md-8">
+        <% if user_signed_in? %>
+          <%= form_with model: [@library, @book, @book.reviews.new], local: true do |f| %>
+            <div class="form-group mb-3">
+              <%= f.label :rating, "Rating (1-5)", class: "form-label" %>
+              <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
+            </div>
+            <div class="form-group mb-3">
+              <%= f.label :comment, "Your Comment", class: "form-label" %>
+              <%= f.text_area :comment, rows: 3, class: "form-control" %>
+            </div>
+            <%= f.submit "Submit Review", class: "btn btn-success btn-sm mt-3" %>
+          <% end %>
+        <% else %>
+          <p class="text-center">Please <%= link_to "sign in", new_user_session_path %> to leave a review.</p>
         <% end %>
-      <% else %>
-        <p>Please <%= link_to "sign in", new_user_session_path %> to leave a review.</p>
-      <% end %>
+      </div>
     </div>
   </div>
 
