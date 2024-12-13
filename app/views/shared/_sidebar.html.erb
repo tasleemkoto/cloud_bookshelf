@@ -7,42 +7,45 @@
 <nav class="sidebar" id="sidebar">
   <div class="sidebar__container">
     <!-- App Name -->
-    <div class="sidebar__header text-center py-3">
+    <div class="sidebar__header text-center py-3" id="sidebar__header">
       <h3>CloudBookshelf</h3>
     </div>
 
     <!-- User Information -->
     <div class="sidebar__user">
-
-
-        <div class="sidebar__info">
-            <h3>User</h3>
-            <span>user@email.com</span>
-        </div>
+      <div class="sidebar__info">
+        <h3>User</h3>
+        <% if user_signed_in? %>
+        <span><%= current_user.email %></span>
+        <% else %>
+        <span>User</span>
+        <% end %>
+      </div>
     </div>
 
     <!-- Sidebar Links -->
     <div class="sidebar__content">
-        <div>
-            <h3 class="sidebar__title">MANAGE</h3>
+      <!-- Manage Section -->
+      <div>
+        <h3 class="sidebar__title">MANAGE</h3>
+        <div class="sidebar__list">
 
-            <div class="sidebar__list">
-                <a href="#" class="sidebar__link active-link">
-                <i class="fa-solid fa-chart-simple"></i>
-                <span>Dashboard</span>
-                </a>
+          <%= link_to libraries_path, class: "sidebar__link" do %>
+              <i class="fa-solid fa-rectangle-list"></i>
+              <span>Library</span>
+          <% end %>
 
-                <a href="#" class="sidebar__link">
-                <i class="fa-solid fa-book"></i>
-                <span>Books</span>
-                </a>
+          <%= link_to checkouts_path, class: "sidebar__link" do %>
+              <i class="fa-solid fa-rectangle-list"></i>
+              <span>Checkouts</span>
+          <% end %>
 
-                <a href="#" class="sidebar__link">
-                <i class="fa-solid fa-user"></i>
-                <span>Profile</span>
-                </a>
+          <%= link_to root_path, class: "sidebar__link" do %>
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+          <% end %>
 
-            </div>
+          
         </div>
       </div>
 
@@ -63,22 +66,14 @@
     </div>
 
     <!-- Sidebar Actions -->
-    <div class="sidebar__actions">
-        <button>
-            <i class="ri-moon-clear-fill sidebar__link sidebar__theme" id="theme-button">
-                <span>Theme</span>
-            </i>
+    <% if user_signed_in? %>
+      <%= form_with url: destroy_user_session_path, method: :delete, class: "sidebar__link" do %>
+        <button type="submit">
+          <i class="ri-logout-box-r-fill"></i>
+          <span>Log Out</span>
         </button>
-
-        <button class="sidebar__link">
-            <i class="ri-logout-box-r-fill"></i>
-            <span>Log Out</span>
-            <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete} %>
-
-
-              </button>
-    </div>
-    </div>
+      <% end %>
+    <% end %>
   </div>
 </nav>
 
@@ -93,7 +88,7 @@
 
     toggleButton.addEventListener("click", () => {
       sidebar.classList.toggle("show-sidebar");
-      sidebarHeader.classList.toggle("show-sidebar");
+      sidebarHeader.classList.toggle("visually-hidden");
       sidebarTitle.classList.toggle("show-sidebar");
     });
   });
