@@ -25,18 +25,23 @@
       <div>
         <h3 class="sidebar__title">MANAGE</h3>
         <div class="sidebar__list">
-          <%= link_to root_path, class: "sidebar__link" do %>
-            <i class="fa-solid fa-chart-simple"></i>
-            <span>Dashboard</span>
+
+          <%= link_to libraries_path, class: "sidebar__link" do %>
+              <i class="fa-solid fa-rectangle-list"></i>
+              <span>Library</span>
           <% end %>
-          <%= link_to root_path, class: "sidebar__link" do %>
-            <i class="fa-solid fa-book"></i>
-            <span>Books</span>
+
+          <%= link_to checkouts_path, class: "sidebar__link" do %>
+              <i class="fa-solid fa-rectangle-list"></i>
+              <span>Checkouts</span>
           <% end %>
+
           <%= link_to root_path, class: "sidebar__link" do %>
             <i class="fa-solid fa-user"></i>
             <span>Profile</span>
           <% end %>
+
+          
         </div>
       </div>
 
@@ -57,12 +62,14 @@
     </div>
 
     <!-- Sidebar Actions -->
-    <div class="sidebar__actions">
-      <%= button_to destroy_user_session_path, method: :delete, class: "sidebar__link" do %>
-        <i class="ri-logout-box-r-fill"></i>
-        <span>Log Out</span>
+    <% if user_signed_in? %>
+      <%= form_with url: destroy_user_session_path, method: :delete, class: "sidebar__link" do %>
+        <button type="submit">
+          <i class="ri-logout-box-r-fill"></i>
+          <span>Log Out</span>
+        </button>
       <% end %>
-    </div>
+    <% end %>
   </div>
 </nav>
 
