@@ -59,7 +59,10 @@
         <button class="sidebar__link">
             <i class="ri-logout-box-r-fill"></i>
             <span>Log Out</span>
-        </button>
+            <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete} %>
+
+
+              </button>
     </div>
     </div>
 </nav>
