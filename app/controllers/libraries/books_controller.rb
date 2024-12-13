@@ -84,6 +84,7 @@ class Libraries::BooksController < ApplicationController
     redirect_to root_path, alert: "You are not authorized to access this library."
   end
 
+
   private
 
   def set_library

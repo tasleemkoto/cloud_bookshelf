@@ -1,5 +1,4 @@
 .sidebar {
-  position: fixed;
   top: 0;
   left: -250px; /* Initially hidden */
   width: 250px;
@@ -7,15 +6,6 @@
   background-color: #f8f9fa;
   transition: left 0.3s ease-in-out;
   z-index: 1050;
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .main-content {
-    margin-left: 250px;
-    padding: 20px;
-  }
 
   &.show-sidebar {
     left: 0; /* Slide in */

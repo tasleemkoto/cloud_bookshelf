@@ -19,8 +19,7 @@
   /* Book Image */
   .book-image {
     width: 100%;
-    max-width: 375px;
-    height: 400px; /* Adjust as needed */
+    height: 250px; /* Adjust as needed */
     overflow: hidden;
     border-radius: 8px;
     display: flex;
@@ -34,7 +33,6 @@
     object-fit: cover;
     border-radius: inherit;
   }
-
 
   /* Book Details Section */
   .book-title {

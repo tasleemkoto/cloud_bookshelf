@@ -7,48 +7,43 @@
     <div class="alert alert-danger"><%= flash[:alert] %></div>
   <% end %>
 
-<!--Back Button -->
-<%= link_to "Back to Book Collection", library_books_path, class: 'btn btn-secondary mb-4' %>
+  <!-- Back Button -->
+  <%= link_to "Back to Libraries", libraries_path, class: 'btn btn-secondary mb-4' %>
 
-  <!-- Book Title and Basic Information -->
-  <h1 class="display-4 text-center my-4">Explore: <span class="text-primary"><%= @book.title %></span></h1>
+  <h1 class="text-center mb-3">Explore: <span class="text-primary"><%= @book.title %></span></h1>
 
   <!-- Book Info Section -->
-  <div class="book-info mb-4">
-    <div class="row">
-      <!-- Book Image Section -->
-      <div class="col-md-4">
-        <div class="book-image">
-          <div class="book-cover">
-            <% if @book.photo.attached? %>
-              <%= cl_image_tag @book.photo.key, alt: @book.title %>
-            <% elsif @random_image %>
-              <%= image_tag @random_image, alt: "Random Book Cover" %>
-            <% else %>
-              <p>No cover available</p>
-            <% end %>
-          </div>
-        </div>
+  <div class="row mb-5">
+    <!-- Book Image -->
+    <div class="col-md-4">
+      <div class="book-image text-center">
+        <% if @book.photo.attached? %>
+          <%= image_tag @book.photo, alt: @book.title, class: "img-fluid rounded shadow" %>
+        <% elsif @random_image %>
+          <%= image_tag @random_image, alt: "Random Book Cover", class: "img-fluid rounded shadow" %>
+        <% else %>
+          <p>No cover available</p>
+        <% end %>
       </div>
+    </div>
 
-      <!-- Book Details Section -->
-      <div class="col-md-4">
-        <div class="book-title">
-          <p><strong>📖 Author:</strong> <%= @book.author %></p>
-          <p><strong>🎭 Genre:</strong> <%= @book.genre %></p>
-          <p><strong>📅 Year:</strong> <%= @book.year %></p>
-          <p><strong>📂 Format:</strong> <%= @book.format.capitalize %></p>
-          <p><strong>📘 Status:</strong> <%= @book.status.humanize %></p>
-          <p><strong>📝 Summary:</strong> <%= @book.summary %></p>
-          <p><strong>📍 Location:</strong> <%= @book.location %></p>
-          <p><strong>📕 Availability:</strong> <%= @book.availability ? "Available" : "Not Available" %></p>
-        </div>
-      </div>
+    <!-- Book Details -->
+    <div class="col-md-5">
+      <ul class="list-unstyled">
+        <p><strong>📖 Author:</strong> <%= @book.author %></p>
+        <p><strong>🎭 Genre:</strong> <%= @book.genre %></p>
+        <p><strong>📅 Year:</strong> <%= @book.year %></p>
+        <p><strong>📂 Format:</strong> <%= @book.format.capitalize %></p>
+        <p><strong>📘 Status:</strong> <%= @book.status.humanize %></p>
+        <p><strong>📝 Summary:</strong> <%= @book.summary %></p>
+        <p><strong>📍 Location:</strong> <%= @book.location %></p>
+        <p><strong>📕 Availability:</strong> <%= @book.availability ? "Available" : "Not Available" %></p>
+      </ul>
+    </div>
 
-      <!-- QR Code, Wishlist, and Download -->
-    <div class="col-md-3 text-center">
+    <!-- QR Code and Wishlist -->
       <% if @book.format == "hardcover" && @book.qr_code.present? %>
-        <div class="d-flex flex-column align-items-center gap-2">
+        <div class="d-flex flex-column align-items-center gap-3 mt-4">
           <div>
             <h5>QR Code</h5>
             <%= raw RQRCode::QRCode.new(@book.qr_code).as_svg(
@@ -58,63 +53,50 @@
               standalone: true
             ) %>
           </div>
-          <div class="mt-3 d-flex flex-column align-items-center">
-            <%= link_to '❤️ Add to Wishlist', library_wishlists_path(@library), method: :post, class: 'btn btn-outline-primary btn-block mt-2' %>
-            <%= link_to '📥 Download QR', qr_code_download_library_book_path(@library, @book), class: 'btn btn-primary btn-block mt-2' %>
+          <div class="mt-3 d-flex flex-column align-items-center gap-2">
+            <%= link_to '❤️ Add to Wishlist', library_wishlists_path(@library),
+                        method: :post,
+                        class: 'btn btn-outline-primary btn-block btn-sm' %>
+            <%= link_to '📥 Download QR', qr_code_download_library_book_path(@library, @book),
+                        class: 'btn btn-primary btn-block btn-sm' %>
           </div>
         </div>
       <% elsif @book.format == "ebook" && @book.pdf.attached? %>
-        <%= link_to "Read Online", read_library_book_path(@book.library, @book), class: "btn btn-primary btn-sm mt-3" %>
+        <!-- Online Reading Option -->
+        <%= link_to "Read Online", read_library_book_path(@book.library, @book),
+                    class: "btn btn-primary btn-sm mt-3" %>
       <% else %>
         <p class="text-muted">This book is not available for online reading.</p>
       <% end %>
-       <% if policy(@book).reserve? %>
-          <%= link_to "Reserve Now", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success mb-3' %>
-        <% end %>
-
     </div>
-  </div>
 
-      <!-- Reserve and Wishlist Button Section
-      <div class="col-md-4 d-flex flex-column align-items-center">
-
-
-        <% if user_signed_in? && policy(@library).create? %>
-          <%= button_to '❤️ Add to Wishlist', library_wishlists_path(@library, book_id: @book.id), method: :post, class: 'btn btn-outline-primary mb-3', data: { turbo: 'false' } %>
-        <% end %>
-      </div>-->
-    </div>
-  </div>
-
-  <!-- Rating and Review Section -->
-  <h3 class="text-center my-4">⭐ Reader Reviews</h3>
-
-  <!-- Rating and Comment Row -->
-  <div class="row">
+  <!-- Reviews Section -->
+  <div class="reviews-section mb-5">
+    <h3 class="text-center mb-4"><i class="fas fa-star"></i> Reader Reviews</h3>
 
     <!-- Reviews List -->
-    <div class="col-md-6">
-      <% if @reviews.any? %>
-        <ul class="reviews-list">
+    <% if @reviews.any? %>
+      <div class="mb-4">
+        <ul class="list-group">
           <% @reviews.each do |review| %>
-            <li id="<%= dom_id(review) %>" class="review-item">
-              <p><strong>Rating:</strong> 🌟 <%= review.rating %> / 5</p>
+            <li id="<%= dom_id(review) %>" class="list-group-item">
+              <p><strong>Rating:</strong> <i class="fas fa-star"></i> <%= review.rating %> / 5</p>
               <p><strong>Comment:</strong> "<%= review.comment %>"</p>
               <p><strong>By:</strong> <%= review.user.email %></p>
               <% if policy(review).destroy? %>
-                <%= button_to '🗑️ Delete Review', library_book_review_path(@library, @book, review),
+                <%= button_to 'Delete Review', library_book_review_path(@library, @book, review),
                               method: :delete,
                               form: { data: { turbo_confirm: 'Are you sure?' } },
-                              class: 'btn btn-danger btn-sm' %>
+                              class: 'btn btn-danger btn-sm mt-2' %>
               <% end %>
             </li>
           <% end %>
         </ul>
         <%= paginate @reviews %>
-      <% else %>
-        <p class="text-muted">No reviews for this book yet. Be the first to share your thoughts!</p>
-      <% end %>
-    </div>
+      </div>
+    <% else %>
+      <p class="text-muted text-center">No reviews yet. Be the first to share your thoughts!</p>
+    <% end %>
 
     <!-- Write a Review -->
     <h4 class="text-center mt-4">Add Your Review</h4>
@@ -138,6 +120,4 @@
       </div>
     </div>
   </div>
-
-
 </div>
