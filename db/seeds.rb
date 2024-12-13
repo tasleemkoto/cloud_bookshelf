@@ -1,6 +1,6 @@
 require 'faker'
-require 'cloudinary'
 require 'open-uri'
+require 'cloudinary'
 
 # Clear old data
 puts "Clearing old data..."
@@ -32,39 +32,36 @@ LibraryUser.create!(user: librarian, library: library_2, is_admin: true)
 
 puts "Library users assigned: #{LibraryUser.count}"
 
-# Add books to libraries
-puts "Adding books to libraries..."
-
-# Fetch images from a Cloudinary folder
-def fetch_cloudinary_images(folder)
+# Fetch assets from Cloudinary
+def fetch_cloudinary_assets(folder)
   resources = Cloudinary::Api.resources(
     type: :upload,
     prefix: folder,
-    max_results: 100 # Adjust the max number as needed
+    max_results: 100
   )
   resources['resources'].map { |resource| resource['secure_url'] }
 rescue Cloudinary::Api::Error => e
-  Rails.logger.error "Cloudinary API Error: #{e.message}"
+  puts "Cloudinary API Error: #{e.message}"
   []
 end
 
-# Example: Fetch images from a specific folder in Cloudinary
-cloudinary_images = fetch_cloudinary_images('books')
+puts "Fetching assets from Cloudinary..."
+cloudinary_photos = fetch_cloudinary_assets('Bookshelf').select { |url| url.match?(/\.(jpg|jpeg|png)$/i) }
 
-# Ensure there are enough images for the books
-if cloudinary_images.size < 16
-  raise "Not enough images in Cloudinary folder! Found #{cloudinary_images.size}, need at least 20."
+if cloudinary_photos.empty?
+  raise "No photos found in Cloudinary folder 'Bookshelf'. Please upload book images."
 end
 
-# Create books with Cloudinary images
-cloudinary_images.shuffle! # Shuffle to assign randomly
+# Predefined PDF URL
+pdf_url = 'https://res.cloudinary.com/dnaxhzf4d/image/upload/v1734113615/sample_ebook_fllzxe.pdf'
 
-16.times do
+puts "Adding books..."
+20.times do
   format = %w[ebook hardcover researchpaper].sample
-  quantity = format == 'hardcover' ? rand(2..5) : 1
+  quantity = format == 'hardcover' ? rand(1..5) : nil
+  qr_code = format == 'hardcover' ? SecureRandom.uuid : nil
 
-  # Create a book
-  book = Book.create!(
+  book = Book.new(
     title: Faker::Book.title,
     summary: Faker::Lorem.paragraph,
     author: Faker::Book.author,
@@ -73,27 +70,46 @@ cloudinary_images.shuffle! # Shuffle to assign randomly
     format: format,
     library: library_1,
     user: librarian,
-    quantity: quantity
+    quantity: quantity,
+    qr_code: qr_code
   )
 
-  # Attach a unique Cloudinary photo
-  photo_url = cloudinary_images.pop # Get and remove the last image from the array
-  downloaded_photo = URI.open(photo_url)
-  book.photo.attach(
-    io: downloaded_photo,
-    filename: File.basename(photo_url),
-    content_type: 'image/jpeg' # Adjust content type based on the file
-  )
+  begin
+    # Attach a random Cloudinary photo
+    photo_url = cloudinary_photos.sample
+    downloaded_photo = URI.open(photo_url)
+    book.photo.attach(
+      io: downloaded_photo,
+      filename: File.basename(photo_url),
+      content_type: downloaded_photo.content_type
+    )
+    puts "Photo attached for book: #{book.title}"
 
-  puts "Book created: #{book.title} (ID: #{book.id}, Quantity: #{book.quantity}, Format: #{book.format}, Photo: #{photo_url})"
+    # Attach the predefined PDF for eBooks
+    if format == 'ebook'
+      downloaded_pdf = URI.open(pdf_url)
+      book.pdf.attach(
+        io: downloaded_pdf,
+        filename: 'sample_ebook.pdf',
+        content_type: 'application/pdf'
+      )
+      puts "PDF attached for eBook: #{book.title}"
+    end
 
-  # Add reviews
-  [student_1, student_2].each do |student|
-    Review.create!(user: student, book: book, rating: rand(1..5), comment: Faker::Lorem.sentence)
+    book.save!
+    puts "Book created: #{book.title}, Format: #{book.format}"
+
+    # Add reviews
+    [student_1, student_2].each do |student|
+      Review.create!(user: student, book: book, rating: rand(1..5), comment: Faker::Lorem.sentence)
+    end
+
+    # Add to wishlist
+    Wishlist.create!(user: student_1, book: book, library: library_1)
+
+  rescue OpenURI::HTTPError => e
+    puts "Failed to attach asset for book '#{book.title}': #{e.message}"
   end
-
-  # Add to wishlist
-  Wishlist.create!(user: student_1, book: book, library: library_1)
 end
 
 puts "Books added: #{Book.count}, Reviews added: #{Review.count}, Wishlists created: #{Wishlist.count}"
@@ -101,17 +117,17 @@ puts "Books added: #{Book.count}, Reviews added: #{Review.count}, Wishlists crea
 # Create checkouts for hardcopy books
 puts "Creating checkouts..."
 library_1.books.where(format: 'hardcover').each do |book|
-  if book.quantity > 0
-    Checkout.create!(
-      user: student_1,
-      book: book,
-      library: library_1,
-      start_date: Date.today,
-      due_date: Date.today + 7.days,
-      status: 'pending'
-    )
-    puts "Checkout created for book: #{book.title} (Remaining quantity: #{[book.quantity - 1, 0].max})"
-  end
+  next unless book.quantity.positive?
+
+  Checkout.create!(
+    user: student_1,
+    book: book,
+    library: library_1,
+    start_date: Date.today,
+    due_date: Date.today + 7.days,
+    status: 'pending'
+  )
+  puts "Checkout created for book: #{book.title}"
 end
 
 puts "Checkouts created: #{Checkout.count}"
@@ -122,5 +138,10 @@ Notification.create!(user: student_1, library: library_1, content: 'New books ar
 Notification.create!(user: librarian, library: library_1, content: 'Please review the latest reservations.')
 
 puts "Notifications created: #{Notification.count}"
-
 puts "Seed data loaded successfully!"
+
+
+
+
+
+
