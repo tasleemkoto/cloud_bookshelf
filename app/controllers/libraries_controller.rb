@@ -83,7 +83,7 @@ class LibrariesController < ApplicationController
         @library.library_users.create!(user: current_user)
       end
 
-      redirect_to library_path(@library), notice: "Successfully accessed the library."
+      redirect_to library_book_path(@library), notice: "Successfully accessed the library."
     else
       # If library is not found, still render with a helpful message
       skip_authorization
