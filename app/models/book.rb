@@ -5,6 +5,9 @@ class Book < ApplicationRecord
   has_many :wishlists, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_one_attached :photo
+
+  # Attachments
+  has_one_attached :photo
   has_one_attached :pdf # For ebooks
 
   # Validations
@@ -18,6 +21,7 @@ class Book < ApplicationRecord
   validates :qr_code, presence: true, if: -> { format == "hardcover" }
   validates :photo, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg'] # Ensure photo is attached and valid
   validates :pdf, attached: true, if: -> { format == "ebook" }, content_type: ['application/pdf'] # Validate pdf for ebooks
+
 
   # Callbacks
   after_create :generate_qr_code

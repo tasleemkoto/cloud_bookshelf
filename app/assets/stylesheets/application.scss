@@ -21,24 +21,21 @@
 @import "pages/add-book-form";
 @import "pages/dashbaords";
 
-
 //bootstrap_variables
 @import "config/_bootstrap_variables";
 
 @import "components/tables";
 
-html, body {
-  height: 100%;
+body, html {
   margin: 0;
   padding: 0;
-  font-family: helvetica;
+  height: 100%; /* Full viewport height */
 }
 
 .layout {
   display: flex;
   flex-direction: row;
   height: 100vh; /* Full viewport height */
-  //overflow: hidden; /* Prevent scrolling if not needed */
 }
 
 /* Sidebar styling */
@@ -78,12 +75,4 @@ html, body {
   .table {
     font-size: 1.1rem; /* Slightly increase font size */
   }
-}
-
-.container-fluid.py-4 .container.my-5 {
-  background-color: #F0F7FF;
-}
-
-.container.my-5 {
-  background-color: #F0F7FF;
 }
