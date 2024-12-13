@@ -19,16 +19,14 @@
 @import "pages/book_index";
 @import "pages/book_show";
 @import "pages/add-book-form";
-@import "pages/dashbaords";
-
+@import "pages/dashboards";
 
 //bootstrap_variables
 @import "config/_bootstrap_variables";
 
 @import "components/tables";
 
-html, body {
-  height: 100%;
+body, html {
   margin: 0;
   padding: 0;
   font-family: helvetica;
