@@ -21,9 +21,9 @@
         <div class="book-image">
           <div class="book-cover">
             <% if @book.photo.attached? %>
-              <%= cl_image_tag @book.photo.key, alt: @book.title, class: "cover-image" %>
+              <%= cl_image_tag @book.photo.key, alt: @book.title %>
             <% elsif @random_image %>
-              <%= image_tag @random_image, alt: "Random Book Cover", class: "cover-image" %>
+              <%= image_tag @random_image, alt: "Random Book Cover" %>
             <% else %>
               <p>No cover available</p>
             <% end %>
@@ -68,19 +68,21 @@
       <% else %>
         <p class="text-muted">This book is not available for online reading.</p>
       <% end %>
+       <% if policy(@book).reserve? %>
+          <%= link_to "Reserve Now", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success mb-3' %>
+        <% end %>
+
     </div>
   </div>
 
-      <!-- Reserve and Wishlist Button Section -->
+      <!-- Reserve and Wishlist Button Section
       <div class="col-md-4 d-flex flex-column align-items-center">
-        <% if policy(@book).reserve? %>
-          <%= link_to "Reserve Now", library_checkouts_path(@library, @book), data: { turbo_method: :post }, class: 'btn btn-success mb-3' %>
-        <% end %>
+
 
         <% if user_signed_in? && policy(@library).create? %>
           <%= button_to '❤️ Add to Wishlist', library_wishlists_path(@library, book_id: @book.id), method: :post, class: 'btn btn-outline-primary mb-3', data: { turbo: 'false' } %>
         <% end %>
-      </div>
+      </div>-->
     </div>
   </div>
 

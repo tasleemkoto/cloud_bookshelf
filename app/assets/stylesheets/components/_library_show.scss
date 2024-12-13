@@ -1,7 +1,8 @@
-.container {
+.card-body.text-center {
   padding: 2rem;
   margin: auto;
   background-color: #E1E8F0;
+  border-radius: 10px;
 }
 
 .card{
@@ -12,50 +13,83 @@
 
 h1.display-5 {
   font-size: 3rem;
-  font-weight: bold;
-  background-color: #2A4D7C;
+  font-weight: light;
+  color: #2a4d7c;
+  font-family: merriweather;
 }
 
 h2 {
   font-size: 2rem;
   font-weight: 500;
-  background-color: #1A82C2;
+  color: #2a4d7c;
+  font-family: merriweather;
 }
 
 .lead {
   font-size: 1.25rem;
   font-weight: 400;
-  background-color: #1A82C2;
+  color: #2a4d7c;
+  font-family: merriweather;
+}
+
+.p {
+color: #2a4d7c;
+}
+
+p.card-text {
+  color: #2a4d7c;
 }
 
 .card-body {
   padding: 20px;
-  background-color: #fff;
+  background-color: #e1e8f0;
   text-align: center;
+  border: none;
 }
 
 .card-body h5 {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #343a40;
+  color: #2a4d7c;
 }
 
 .card-body .card-text {
   font-size: 1rem;
-  background-color: #6c757d;
 }
 
-.btn {
+.btn-primary {
   padding: 10px 20px;
   font-size: 1rem;
-  border-radius: 25px;
+  border-radius: 5px;
   text-decoration: none;
   border: none;
-  background-color: #4F97D1;
+  background-color: #045393;
+  color: #e1e8f0;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  border: none;
+  background-color: #022745;
+  color: #e1e8f0;
+}
+
+.btn-success {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  border: none;
+  background-color: #033e6e;
+  color: #e1e8f0;
 }
 
 .btn:hover {
-  background-color: #2196F3;
+  background-color: #4F97D1;
+  color: #e1e8f0;
 }
 
 
