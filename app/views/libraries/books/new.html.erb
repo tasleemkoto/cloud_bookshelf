@@ -32,14 +32,18 @@
       </div>
 
       <!-- Hardcover-Specific Fields -->
-      <div class="form-field" id="hardcover-fields" style="display: <%= @book.format == 'hardcover' ? 'block' : 'none' %>;">
+      <div class="form-field" id="hardcover-fields" style="display: none;">
         <%= f.input :quantity, label: "Quantity", input_html: { value: 1 } %>
-        <%= f.input :qr_code, label: "QR Code (auto-generated if blank)", input_html: { placeholder: "Optional" } %>
       </div>
 
       <!-- eBook-Specific Fields -->
-      <div class="form-field" id="ebook-fields" style="display: <%= @book.format == 'ebook' ? 'block' : 'none' %>;">
-        <%= f.input :pdf, label: "Upload eBook PDF", as: :file %>
+      <div class="form-field" id="ebook-fields" style="display: none;">
+        <%= f.input :pdf, label: "Upload eBook PDF (optional)", as: :file %>
+      </div>
+
+      <!-- Research Paper-Specific Fields -->
+      <div class="form-field" id="researchpaper-fields" style="display: none;">
+        <%= f.input :pdf, label: "Upload Research Paper PDF (optional)", as: :file %>
       </div>
 
       <!-- Photo for All Books -->
@@ -57,19 +61,20 @@
 </div>
 
 <script>
-  // Dynamically show/hide fields based on the selected format
-  document.addEventListener("DOMContentLoaded", function () {
-    const formatSelect = document.getElementById("book-format");
+  document.addEventListener("DOMContentLoaded", () => {
+    const formatField = document.getElementById("book-format");
     const hardcoverFields = document.getElementById("hardcover-fields");
     const ebookFields = document.getElementById("ebook-fields");
+    const researchpaperFields = document.getElementById("researchpaper-fields");
 
     function toggleFields() {
-      const format = formatSelect.value;
+      const format = formatField.value;
       hardcoverFields.style.display = format === "hardcover" ? "block" : "none";
       ebookFields.style.display = format === "ebook" ? "block" : "none";
+      researchpaperFields.style.display = format === "researchpaper" ? "block" : "none";
     }
 
-    formatSelect.addEventListener("change", toggleFields);
-    toggleFields(); // Initial call to set the fields correctly
+    formatField.addEventListener("change", toggleFields);
+    toggleFields();
   });
 </script>

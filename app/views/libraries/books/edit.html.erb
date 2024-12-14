@@ -57,19 +57,19 @@
 </div>
 
 <script>
-  // Dynamically show/hide fields based on the selected format
-  document.addEventListener("DOMContentLoaded", function () {
-    const formatSelect = document.getElementById("book-format");
+  document.addEventListener("DOMContentLoaded", () => {
+    const formatField = document.getElementById("book-format");
     const hardcoverFields = document.getElementById("hardcover-fields");
     const ebookFields = document.getElementById("ebook-fields");
 
     function toggleFields() {
-      const format = formatSelect.value;
+      const format = formatField.value;
       hardcoverFields.style.display = format === "hardcover" ? "block" : "none";
       ebookFields.style.display = format === "ebook" ? "block" : "none";
     }
 
-    formatSelect.addEventListener("change", toggleFields);
-    toggleFields(); // Initial call to set the fields correctly
+    formatField.addEventListener("change", toggleFields);
+    toggleFields();
   });
+
 </script>

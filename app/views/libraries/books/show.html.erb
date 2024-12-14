@@ -34,12 +34,13 @@
         <p><strong>🎭 Genre:</strong> <%= @book.genre %></p>
         <p><strong>📅 Year:</strong> <%= @book.year %></p>
         <p><strong>📂 Format:</strong> <%= @book.format.capitalize %></p>
-        <p><strong>📘 Status:</strong> <%= @book.status.humanize %></p>
+        <p><strong>📘 Status:</strong> <%= @book.status%></p>
         <p><strong>📝 Summary:</strong> <%= @book.summary %></p>
         <p><strong>📍 Location:</strong> <%= @book.location %></p>
         <p><strong>📕 Availability:</strong> <%= @book.availability ? "Available" : "Not Available" %></p>
       </ul>
     </div>
+
 
     <!-- QR Code and Wishlist -->
       <% if @book.format == "hardcover" && @book.qr_code.present? %>
@@ -69,10 +70,28 @@
         <p class="text-muted">This book is not available for online reading.</p>
       <% end %>
     </div>
+    <% if @book.reservable? %>
+      <%= button_to 'Reserve Book', checkouts_path(checkout: { book_id: @book.id, user_id: current_user.id, library_id: @library.id }),
+                    method: :post, class: 'btn btn-success btn-sm', data: { confirm: 'Do you want to reserve this book?' } %>
+    <% else %>
+      <p class="text-muted">
+        This book is not available for reservation.
+        <% if @book.status != "available" %>
+          Reason: The book is not available (status: <%= @book.status %>).
+        <% elsif @book.quantity <= 0 %>
+          Reason: No copies available.
+        <% elsif @book.checkouts.pending.exists? %>
+          Reason: There is already a pending reservation.
+        <% end %>
+      </p>
+    <% end %>
+
+
+
 
   <!-- Reviews Section -->
   <div class="reviews-section mb-5">
-    <h3 class="text-center mb-4"><i class="fas fa-star"></i> Reader Reviews</h3>
+    <h3 class="mb-4"><i class="fas fa-star"></i> Reader Reviews</h3>
 
     <!-- Reviews List -->
     <% if @reviews.any? %>
@@ -99,16 +118,16 @@
     <% end %>
 
     <!-- Write a Review -->
-    <h4 class="text-center mt-4">Add Your Review</h4>
+    <h4 class="mt-4">Add Your Review</h4>
     <div class="d-flex justify-content-center">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <% if user_signed_in? %>
           <%= form_with model: [@library, @book, @book.reviews.new], local: true do |f| %>
-            <div class="form-group mb-3">
+            <div class="mb-3">
               <%= f.label :rating, "Rating (1-5)", class: "form-label" %>
               <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
             </div>
-            <div class="form-group mb-3">
+            <div class="mb-3">
               <%= f.label :comment, "Your Comment", class: "form-label" %>
               <%= f.text_area :comment, rows: 3, class: "form-control" %>
             </div>

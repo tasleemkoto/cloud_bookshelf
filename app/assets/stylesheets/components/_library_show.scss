@@ -44,11 +44,20 @@ h2 {
   color: #6c757d;
 }
 
+
+
 .btn {
   padding: 10px 20px;
   font-size: 1rem;
   border-radius: 10px;
   text-decoration: none;
+}
+
+td {
+  .btn {
+    padding: 3px;
+    width: 73px;
+  }
 }
 
 .btn-primary {

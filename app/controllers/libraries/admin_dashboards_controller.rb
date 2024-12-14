@@ -4,10 +4,11 @@ class Libraries::AdminDashboardsController < ApplicationController
   def show
     authorize @library, :admin_dashboard?
 
-    @books = @library.books.page(params[:page]).per(4) # Paginate books
-    @users = @library.users.page(params[:users_page]).per(4) # Paginate users
-    @pending_checkouts = @library.checkouts.pending.includes(:book, :user).page(params[:notifications_page]).per(4) # Paginate pending checkouts
-    @notification = Notification.new # Initialize the notification object here
+     # Paginate each section with its respective parameter
+     @books = @library.books.page(params[:books_page]).per(4)
+     @users = @library.users.page(params[:users_page]).per(4)
+     @pending_checkouts = @library.checkouts.pending.includes(:book, :user).page(params[:pending_checkouts_page]).per(4)
+     @notification = Notification.new
   end
 
 

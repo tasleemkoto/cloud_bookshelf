@@ -87,15 +87,12 @@ Rails.application.routes.draw do
   end
 
   # Checkouts routes
-  resources :checkouts, only: [:index, :new, :create, :edit, :update] do
-    patch :return, on: :member
-    # Route: PATCH /checkouts/:id/return
-    # Marks a specific book as returned via the `return` action.
+  resources :checkouts, only: %i[create] do
+    member do
+      patch :approve
+      patch :deny
+    end
   end
-
-  patch "checkouts/:id/approve_reservation", to: "checkouts#approve_reservation", as: "approve_reservation"
-
-  patch "checkouts/:id/deny_reservation", to: "checkouts#deny_reservation", as: "deny_reservation"
 
   # Notifications routes
   resources :notifications, only: [:create]

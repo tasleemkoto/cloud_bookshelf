@@ -21,14 +21,41 @@ class Libraries::BooksController < ApplicationController
 
   def create
     @book = @library.books.new(book_params)
+    @book.user_id = current_user.id # Assign the current user's ID to the book
+
     authorize @book
 
+    # Generate QR code for hardcover books
+    if @book.format == "hardcover"
+      @book.qr_code = Rails.application.routes.url_helpers.library_book_url(
+        library_id: @library.id,
+        id: SecureRandom.uuid, # Generate a temporary unique identifier for QR
+        host: 'www.cloudbookshelf.me'
+      )
+    end
+
+    # Set initial status
+    @book.status ||= "available"
+
     if @book.save
+      # Generate the final QR code after saving the book with a real ID
+      if @book.format == "hardcover"
+        @book.update!(
+          qr_code: Rails.application.routes.url_helpers.library_book_url(
+            library_id: @library.id,
+            id: @book.id,
+            host: 'www.cloudbookshelf.me'
+          )
+        )
+      end
       redirect_to library_book_path(@library, @book), notice: "Book successfully added."
     else
+      flash.now[:alert] = @book.errors.full_messages.to_sentence
       render :new
     end
   end
+
+
 
   def edit
     authorize @book
@@ -89,7 +116,10 @@ class Libraries::BooksController < ApplicationController
 
   def set_library
     @library = Library.find(params[:library_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to libraries_path, alert: "Library not found."
   end
+
 
   def set_book
     @book = @library.books.find(params[:id])
