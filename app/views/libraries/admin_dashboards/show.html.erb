@@ -42,7 +42,8 @@
         </tbody>
       </table>
     </div>
-    <%= paginate @books %>
+    <%= paginate @books, param_name: :books_page %>
+
   <% else %>
     <p class="text-muted">No books available in this library. Use the button below to add a book.</p>
     <%= link_to 'Add New Book', new_library_book_path(@library), class: 'btn btn-primary' %>
@@ -68,15 +69,16 @@
               <td><%= checkout.book.title %></td>
               <td><%= checkout.created_at.strftime('%Y-%m-%d') %></td>
               <td>
-                <%= link_to 'Approve', approve_reservation_path(checkout), data: { turbo_method: :patch }, class: 'btn btn-success btn-sm me-2' %>
-                <%= link_to 'Deny', deny_reservation_path(checkout.id), data: { turbo_method: :patch, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %>
+                <%= button_to 'Approve', approve_checkout_path(checkout), method: :patch, class: 'btn btn-success btn-sm', data: { confirm: 'Do you want to approve this reservation?' } %>
+                <%= button_to 'Deny', deny_checkout_path(checkout), method: :patch, class: 'btn btn-danger btn-sm', data: { confirm: 'Do you want to deny this reservation?' } %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
-    <%= paginate @pending_checkouts %>
+    <%= paginate @pending_checkouts, param_name: :pending_checkouts_page %>
+
   <% else %>
     <p class="text-muted">No pending reservations at the moment.</p>
   <% end %>
@@ -104,7 +106,8 @@
         </tbody>
       </table>
     </div>
-    <%= paginate @users %>
+   <%= paginate @users, param_name: :users_page %>
+
   <% else %>
     <p class="text-muted">No users associated with this library yet.</p>
   <% end %>

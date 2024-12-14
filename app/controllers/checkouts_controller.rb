@@ -1,77 +1,67 @@
 class CheckoutsController < ApplicationController
-  before_action :set_checkout, only: %i[edit update destroy return]
-  before_action :authorize_checkout, only: %i[edit update destroy return]
+  before_action :authenticate_user!
+  before_action :set_checkout, only: %i[approve deny]
 
-  def index
-    @checkouts = policy_scope(Checkout)
-  end
-
-  def new
-    @checkout = Checkout.new
-    authorize @checkout
-  end
-
+  # Create a new reservation
   def create
-    @library = Library.find(params[:library_id])
-    @book = Book.find(params[:id])
-    @checkout = current_user.checkouts.new(library: @library, book: @book)
+    @checkout = Checkout.new(checkout_params)
     @checkout.status = :pending
-    authorize @checkout
 
     if @checkout.save
-      redirect_to user_dashboard_library_path(@library), notice: "Reservation request submitted."
+      redirect_to library_book_path(@checkout.library, @checkout.book),
+                  notice: 'Reservation request sent to the librarian.'
     else
-      render :new
+      redirect_to library_book_path(@checkout.library, @checkout.book),
+                  alert: @checkout.errors.full_messages.to_sentence
     end
   end
 
-  def approve_reservation
-    @checkout = Checkout.find(params[:id])
-    authorize @checkout, :approve_reservation?
-    if @checkout.update(status: "approved")
-      @checkout.book.decrement!(:quantity)
-      flash[:notice] = "Reservation approved successfully."
+  # Admin approves the reservation
+  def approve
+    if @checkout.book.quantity.positive?
+      ActiveRecord::Base.transaction do
+        @checkout.book.decrement_quantity!
+        @checkout.update!(status: :approved, start_date: Date.today, due_date: Date.today + 7.days)
+      end
+      redirect_to admin_dashboard_library_path(@checkout.library),
+                  notice: 'Reservation approved successfully.'
     else
-      raise
-      flash[:alert] = "Could not approve the reservation."
+      redirect_to admin_dashboard_library_path(@checkout.library),
+                  alert: 'Insufficient book quantity.'
     end
-    @library = @checkout.book.library
-    redirect_to admin_dashboard_library_path(@library)
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_dashboard_library_path(@checkout.library),
+                alert: "Failed to approve the reservation: #{e.message}"
   end
 
-  def deny_reservation
-    @checkout = Checkout.find(params[:id])
-    authorize @checkout, :deny_reservation?
+  # Admin denies the reservation
+  def deny
+    ActiveRecord::Base.transaction do
+      # Restore the book's quantity if it was decremented during the reservation
+      @checkout.book.increment_quantity! if @checkout.book.quantity.present?
 
-    if @checkout.update(status: :denied)
-      flash[:notice] = "Reservation denied successfully."
-    else
-      flash[:alert] = "Could not deny the reservation."
+      # Update the status to denied without triggering validations
+      @checkout.update_columns(status: :denied)
     end
-    @library = @checkout.book.library
-    redirect_to admin_dashboard_library_path(@library)
+
+    redirect_to admin_dashboard_library_path(@checkout.library),
+                notice: 'Reservation denied.'
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_dashboard_library_path(@checkout.library),
+                alert: "Failed to deny the reservation: #{e.message}"
   end
 
-  def return
-    if @checkout.update(status: :returned)
-      @checkout.book.increment!(:quantity)
-      redirect_to checkouts_path, notice: "Book successfully returned."
-    else
-      redirect_to checkouts_path, alert: "Unable to return the book."
-    end
-  end
 
   private
 
   def set_checkout
     @checkout = Checkout.find(params[:id])
-  end
-
-  def authorize_checkout
-    authorize @checkout
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_dashboard_library_path(params[:library_id]),
+                alert: 'Reservation not found.'
   end
 
   def checkout_params
-    params.require(:checkout).permit(:book_id, :library_id, :start_date, :due_date)
+    params.require(:checkout).permit(:book_id, :user_id, :library_id)
   end
 end

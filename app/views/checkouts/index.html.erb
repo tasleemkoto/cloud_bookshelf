@@ -23,7 +23,7 @@
       <% @checkouts.each do |checkout| %>
         <tr>
           <td><%= checkout.book.title %></td>
-          <td><%= checkout.status.humanize %></td>
+          <td><%= checkout.status%></td>
           <td><%= checkout.start_date.strftime('%Y-%m-%d') if checkout.start_date %></td>
           <td><%= checkout.due_date.strftime('%Y-%m-%d') if checkout.due_date %></td>
           <td><%= checkout.return_date.strftime('%Y-%m-%d') if checkout.return_date %></td>

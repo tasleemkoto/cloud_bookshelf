@@ -52,8 +52,8 @@ if cloudinary_photos.empty?
   raise "No photos found in Cloudinary folder 'Bookshelf'. Please upload book images."
 end
 
-# Predefined PDF URL
-pdf_url = 'https://res.cloudinary.com/dnaxhzf4d/image/upload/v1734113615/sample_ebook_fllzxe.pdf'
+# Define fallback PDF path
+fallback_pdf_path = Rails.root.join('app/assets/pdfs/sample_ebook.pdf')
 
 puts "Adding books..."
 20.times do
@@ -85,15 +85,25 @@ puts "Adding books..."
     )
     puts "Photo attached for book: #{book.title}"
 
-    # Attach the predefined PDF for eBooks
+    # Attach the PDF
     if format == 'ebook'
-      downloaded_pdf = URI.open(pdf_url)
-      book.pdf.attach(
-        io: downloaded_pdf,
-        filename: 'sample_ebook.pdf',
-        content_type: 'application/pdf'
-      )
-      puts "PDF attached for eBook: #{book.title}"
+      pdf_url = photo_url.gsub(/\.(jpg|jpeg|png)$/i, '.pdf') # Try replacing the file extension
+      begin
+        downloaded_pdf = URI.open(pdf_url)
+        book.pdf.attach(
+          io: downloaded_pdf,
+          filename: File.basename(pdf_url),
+          content_type: 'application/pdf'
+        )
+        puts "PDF attached for eBook: #{book.title}"
+      rescue OpenURI::HTTPError => e
+        puts "PDF not found on Cloudinary for book '#{book.title}', using local fallback."
+        book.pdf.attach(
+          io: File.open(fallback_pdf_path),
+          filename: 'sample_ebook.pdf',
+          content_type: 'application/pdf'
+        )
+      end
     end
 
     book.save!
@@ -114,23 +124,31 @@ end
 
 puts "Books added: #{Book.count}, Reviews added: #{Review.count}, Wishlists created: #{Wishlist.count}"
 
-# Create checkouts for hardcopy books
 puts "Creating checkouts..."
 library_1.books.where(format: 'hardcover').each do |book|
-  next unless book.quantity.positive?
+  next unless book.quantity&.positive? # Skip books with zero or nil quantity
 
-  Checkout.create!(
-    user: student_1,
-    book: book,
-    library: library_1,
-    start_date: Date.today,
-    due_date: Date.today + 7.days,
-    status: 'pending'
-  )
-  puts "Checkout created for book: #{book.title}"
+  while book.quantity > 0
+    begin
+      ActiveRecord::Base.transaction do
+        Checkout.create!(
+          user: student_1,
+          book: book,
+          library: library_1,
+          start_date: Date.today,
+          due_date: Date.today + 7.days,
+          status: 'pending'
+        )
+        book.update!(quantity: book.quantity - 1) # Decrement quantity safely
+      end
+      puts "Checkout created for book: #{book.title}"
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Failed to create checkout for book '#{book.title}': #{e.message}"
+      break
+    end
+  end
 end
 
-puts "Checkouts created: #{Checkout.count}"
 
 # Create notifications
 puts "Creating notifications..."
@@ -139,9 +157,3 @@ Notification.create!(user: librarian, library: library_1, content: 'Please revie
 
 puts "Notifications created: #{Notification.count}"
 puts "Seed data loaded successfully!"
-
-
-
-
-
-

@@ -25,18 +25,19 @@ class CheckoutPolicy < ApplicationPolicy
     library_admin? || record.user == user
   end
 
-  def approve_reservation?
-    library_admin?
+  def approve?
+    user.library_admin?(record.library) # Only library admins can approve reservations
   end
 
-  def deny_reservation?
-    library_admin?
+  def deny?
+    user.library_admin?(record.library) # Only library admins can deny reservations
   end
 
 
   private
 
   def library_admin?
-    record.book.library.library_users.exists?(user_id: user.id, is_admin: true)
+    library_user = LibraryUser.find_by(user_id: id, library_id: library.id)
+    library_user&.is_admin || false
   end
 end

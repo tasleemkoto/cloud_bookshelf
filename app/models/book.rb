@@ -16,11 +16,10 @@ class Book < ApplicationRecord
   validates :format, inclusion: { in: %w[ebook hardcover researchpaper] }
   validates :quantity, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
   validates :status, inclusion: { in: %w[available reserve_pending reserved not_available] }, allow_nil: true
-  validates :qr_code, uniqueness: true, allow_nil: true
 
-  validates :qr_code, presence: true, if: -> { format == "hardcover" }
-  validates :photo, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg'] # Ensure photo is attached and valid
-  validates :pdf, attached: true, if: -> { format == "ebook" }, content_type: ['application/pdf'] # Validate pdf for ebooks
+  validates :qr_code, uniqueness: true, presence: true, if: -> { format == 'hardcover' }
+  validates :photo, attached: false, content_type: ['image/png', 'image/jpg', 'image/jpeg'], unless: -> { pdf.attached? || format == 'researchpaper' }
+  validates :pdf, attached: false, if: -> { format == 'ebook' }, content_type: ['application/pdf']
 
 
   # Callbacks
@@ -30,8 +29,20 @@ class Book < ApplicationRecord
 
   # Default values
   def set_defaults
-    self.status ||= "available"
-    self.quantity ||= 0
+    self.quantity ||= 1 # Default quantity
+    self.status ||= "available" # Default status
+  end
+
+  def available_for_checkout?
+    format == 'hardcover' && quantity.positive?
+  end
+
+  def decrement_quantity!
+    update!(quantity: quantity - 1) if quantity.positive?
+  end
+
+  def increment_quantity!
+    update!(quantity: quantity + 1)
   end
 
   # Generate a unique QR code after the book is created
@@ -67,8 +78,14 @@ class Book < ApplicationRecord
 
   # Check if the book is reservable
   def reservable?
-    format == "hardcover" && quantity.positive? && status == "available"
+    return false unless format == "hardcover"  # Only hardcover books can be reserved
+    return false unless quantity.positive?    # Ensure quantity is greater than 0
+    return false unless status == "available" # Status must be "available"
+    return false if checkouts.pending.exists? # No pending checkouts should exist
+
+    true
   end
+
 
   # Scopes
   scope :available, -> { where(status: "available") }
